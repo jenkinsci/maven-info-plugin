@@ -11,7 +11,7 @@
   <groupId>org.tomfolga</groupId>
   <artifactId>maven-info</artifactId>
   <name>Hudson Maven Info Plugin</name>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.2</version>
   <packaging>hpi</packaging>
 
   <!-- get every artifact through maven.glassfish.org, which proxies all the artifacts that we need -->
@@ -37,9 +37,9 @@
   </dependencies>
 
   <scm>
-    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/trunk/hudson/plugins/maven-info</connection>
-    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/trunk/hudson/plugins/maven-info</developerConnection>
-    <url>https://hudson.dev.java.net/source/browse/hudson/hudson/plugins/maven-info</url>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/maven-info-0.0.2</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/maven-info-0.0.2</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/hudson/plugins/maven-info/tags/maven-info-0.0.2</url>
   </scm>
   <url>http://wiki.hudson-ci.org/display/HUDSON/Maven+Info+Plugin</url>    
   <developers>
