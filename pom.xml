@@ -11,7 +11,7 @@
   <groupId>org.tomfolga</groupId>
   <artifactId>maven-info</artifactId>
   <name>Hudson Maven Info Plugin</name>
-  <version>0.0.3</version>
+  <version>0.0.4-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
   <dependencies>
@@ -28,11 +28,5 @@
       <name>Tom Folga</name>
       <email>tomfolga@gmail.com</email>
     </developer>
-  </developers>  
-
-  <scm>
-    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/maven-info-0.0.3</connection>
-    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/maven-info-0.0.3</developerConnection>
-    <url>https://hudson.dev.java.net/source/browse/hudson/tags/maven-info-0.0.3</url>
-  </scm>
+  </developers>
 </project>
