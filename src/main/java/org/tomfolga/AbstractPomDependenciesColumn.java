@@ -66,6 +66,8 @@ public abstract class AbstractPomDependenciesColumn extends ListViewColumn {
 				fieldValue = (Set<ModuleDependency>) privateStringField
 						.get(mavenModule);
 				for (ModuleDependency moduleDependency : fieldValue) {
+				    // skip displaying maven plugin dependencies
+				    if (moduleDependency.plugin) continue;
 					if (onlyWithinGroupId) {
 						if (mavenModule.getModuleName().groupId
 								.equals(moduleDependency.getName().groupId)) {
