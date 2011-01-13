@@ -1,10 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.jvnet.hudson.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.319</version><!-- which version of Hudson is this plugin built against? -->
-    <relativePath>../pom.xml</relativePath>
+    <version>1.319</version>
   </parent>
 
 
@@ -14,19 +14,58 @@
   <version>0.0.4-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
+  <url>http://wiki.hudson-ci.org/display/HUDSON/Maven+Info+Plugin</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <hudsonCoreVersion>1.395-SNAPSHOT</hudsonCoreVersion>
+  </properties>
+
+  <scm>
+   <connection>scm:git:git://github.com/hudson/maven-info-plugin.git</connection>
+   <developerConnection>scm:git:git@github.com:hudson/maven-info-plugin.git</developerConnection>
+   <url>https://github.com/hudson/maven-info-plugin</url>
+  </scm>
+
   <dependencies>
-  	<dependency>  		
-  		<groupId>org.jvnet.hudson.main</groupId>
-  		<artifactId>maven-plugin</artifactId>  		
-  	</dependency>
+    <dependency>
+      <groupId>org.jvnet.hudson.main</groupId>
+      <artifactId>maven-plugin</artifactId>
+      <version>${hudsonCoreVersion}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jvnet.hudson.main</groupId>
+      <artifactId>hudson-core</artifactId>
+      <version>${hudsonCoreVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jvnet.hudson.main</groupId>
+      <artifactId>hudson-war</artifactId>
+      <version>${hudsonCoreVersion}</version>
+      <scope>test</scope>
+      <type>war</type>
+    </dependency>    
+    <dependency>
+      <groupId>org.jvnet.hudson.main</groupId>
+      <artifactId>hudson-test-harness</artifactId>
+      <version>${hudsonCoreVersion}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
-  <url>http://wiki.hudson-ci.org/display/HUDSON/Maven+Info+Plugin</url>    
+  
   <developers>
     <developer>
       <id>tomfolga</id>
       <name>Tom Folga</name>
       <email>tomfolga@gmail.com</email>
+    </developer>
+    <developer>
+      <id>olamy</id>
+      <name>Olivier Lamy</name>
+      <email>olamy@apache.org</email>
     </developer>
   </developers>
 </project>
