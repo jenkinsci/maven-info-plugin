@@ -20,6 +20,20 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <hudsonCoreVersion>1.395-SNAPSHOT</hudsonCoreVersion>
   </properties>
+  
+  
+  <developers>
+    <developer>
+      <id>tomfolga</id>
+      <name>Tom Folga</name>
+      <email>tomfolga@gmail.com</email>
+    </developer>
+    <developer>
+      <id>olamy</id>
+      <name>Olivier Lamy</name>
+      <email>olamy@apache.org</email>
+    </developer>
+  </developers>  
 
   <scm>
    <connection>scm:git:git://github.com/hudson/maven-info-plugin.git</connection>
@@ -54,18 +68,45 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
   
-  <developers>
-    <developer>
-      <id>tomfolga</id>
-      <name>Tom Folga</name>
-      <email>tomfolga@gmail.com</email>
-    </developer>
-    <developer>
-      <id>olamy</id>
-      <name>Olivier Lamy</name>
-      <email>olamy@apache.org</email>
-    </developer>
-  </developers>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.4.3</version>
+        </plugin> 
+        <plugin>
+          <groupId>org.apache.maven</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>2.3.2</version>
+          <configuration>
+            <source>1.5</source>
+            <target>1.5</target>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.7.1</version>
+        </plugin>    
+      </plugins>
+    </pluginManagement>
+  </build>  
+  
+  <distributionManagement>
+    <!--  maven3 doesn't support anymore id local -->
+    <snapshotRepository>
+      <!-- prevent accidental deployment of SNAPSHOTS to repository -->
+      <id>local.repository</id>
+      <url>file:.</url>
+    </snapshotRepository>
+    <repository>
+      <id>java.net-m2-repository</id>
+      <url>http://maven.hudson-labs.org:8081/content/repositories/releases/</url>
+    </repository>
+  </distributionManagement>  
+
+
 </project>
