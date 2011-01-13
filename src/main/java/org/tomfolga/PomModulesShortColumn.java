@@ -1,7 +1,6 @@
 package org.tomfolga;
 
 import hudson.Extension;
-import hudson.maven.MavenModule;
 import hudson.model.Descriptor;
 import hudson.views.ListViewColumn;
 import net.sf.json.JSONObject;
