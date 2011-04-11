@@ -10,11 +10,11 @@
 
   <groupId>org.tomfolga</groupId>
   <artifactId>maven-info</artifactId>
-  <name>Hudson Maven Info Plugin</name>
+  <name>Jenkins Maven Info Plugin</name>
   <version>0.0.4-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
-  <url>http://wiki.hudson-ci.org/display/HUDSON/Maven+Info+Plugin</url>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/Maven+Info+Plugin</url>
 
   <developers>
     <developer>
@@ -30,9 +30,9 @@
   </developers>  
 
   <scm>
-   <connection>scm:git:git://github.com/hudson/maven-info-plugin.git</connection>
-   <developerConnection>scm:git:git@github.com:hudson/maven-info-plugin.git</developerConnection>
-   <url>https://github.com/hudson/maven-info-plugin</url>
+   <connection>scm:git:git://github.com/jenkinsci/maven-info-plugin.git</connection>
+   <developerConnection>scm:git:git@github.com:jenkinsci/maven-info-plugin.git</developerConnection>
+   <url>https://github.com/jenkinsci/maven-info-plugin</url>
   </scm>
 
   <dependencies>
