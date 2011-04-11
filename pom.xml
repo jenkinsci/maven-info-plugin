@@ -2,9 +2,9 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.jvnet.hudson.plugins</groupId>
+    <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.319</version>
+    <version>1.403</version>
   </parent>
 
 
@@ -16,12 +16,6 @@
 
   <url>http://wiki.hudson-ci.org/display/HUDSON/Maven+Info+Plugin</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <hudsonCoreVersion>1.395-SNAPSHOT</hudsonCoreVersion>
-  </properties>
-  
-  
   <developers>
     <developer>
       <id>tomfolga</id>
@@ -43,57 +37,11 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.jvnet.hudson.main</groupId>
+      <groupId>org.jenkins-ci.main</groupId>
       <artifactId>maven-plugin</artifactId>
-      <version>${hudsonCoreVersion}</version>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-      <groupId>org.jvnet.hudson.main</groupId>
-      <artifactId>hudson-core</artifactId>
-      <version>${hudsonCoreVersion}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jvnet.hudson.main</groupId>
-      <artifactId>hudson-war</artifactId>
-      <version>${hudsonCoreVersion}</version>
-      <scope>test</scope>
-      <type>war</type>
-    </dependency>    
-    <dependency>
-      <groupId>org.jvnet.hudson.main</groupId>
-      <artifactId>hudson-test-harness</artifactId>
-      <version>${hudsonCoreVersion}</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
-  
-  <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>2.4.3</version>
-        </plugin> 
-        <plugin>
-          <groupId>org.apache.maven</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.3.2</version>
-          <configuration>
-            <source>1.5</source>
-            <target>1.5</target>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.7.1</version>
-        </plugin>    
-      </plugins>
-    </pluginManagement>
-  </build>  
   
   <distributionManagement>
     <!--  maven3 doesn't support anymore id local -->
@@ -102,11 +50,7 @@
       <id>local.repository</id>
       <url>file:.</url>
     </snapshotRepository>
-    <repository>
-      <id>java.net-m2-repository</id>
-      <url>http://maven.hudson-labs.org:8081/content/repositories/releases/</url>
-    </repository>
-  </distributionManagement>  
+  </distributionManagement>
 
 
 </project>
