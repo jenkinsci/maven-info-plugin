@@ -9,9 +9,14 @@ import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
-
-
+/**
+ * Prints version of the last build of a Maven Job.
+ * 
+ * @author emenaceb
+ * 
+ */
 public class MavenVersionColumn extends ListViewColumn {
+	
 	@Extension
 	public static class DescriptorImpl extends ListViewColumnDescriptor {
 		@Override
@@ -20,7 +25,8 @@ public class MavenVersionColumn extends ListViewColumn {
 		}
 
 		@Override
-		public ListViewColumn newInstance(StaplerRequest arg0, JSONObject arg1) throws hudson.model.Descriptor.FormException {
+		public ListViewColumn newInstance(StaplerRequest req, JSONObject obj)
+				throws hudson.model.Descriptor.FormException {
 			return new MavenVersionColumn();
 		}
 
