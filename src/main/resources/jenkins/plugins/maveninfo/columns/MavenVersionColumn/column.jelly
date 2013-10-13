@@ -1,0 +1,19 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+	<j:set var="tt">
+		<b>GroupId:</b> ${job.lastBuild.parent.rootModule.moduleName.groupId}<br/>
+		<b>ArtifactId:</b> ${job.lastBuild.parent.rootModule.moduleName.artifactId}<br/>
+		<b>Version:</b> ${job.lastBuild.parent.rootModule.version}<br/>
+		<j:if test="${job.lastBuild.moduleLastBuilds.size() > 1}">
+		<b>Modules:</b> <br/>
+		<j:forEach var="mavenModule" items="${job.lastBuild.moduleLastBuilds.keySet()}">
+			<j:if test="${ job.lastBuild.parent.rootModule != mavenModule}">	
+   			${mavenModule.moduleName.artifactId}
+   			<j:if test="${ job.lastBuild.parent.rootModule.version != mavenModule.version}">[${mavenModule.version}]</j:if>
+   			<j:if test="${ job.lastBuild.parent.rootModule.moduleName.groupId != mavenModule.moduleName.groupId}">(${mavenModule.moduleName.groupId})</j:if>
+   			<br/>
+   			</j:if>
+		</j:forEach>
+	</j:if>
+	</j:set>
+	<td tooltip="${tt}">${job.lastBuild.parent.rootModule.version}</td>	
+</j:jelly>
