@@ -21,7 +21,7 @@ public class MavenVersionColumn extends ListViewColumn {
 	public static class DescriptorImpl extends ListViewColumnDescriptor {
 		@Override
 		public String getDisplayName() {
-			return Messages.MavenVersionColumn_Description();
+			return Messages.MavenVersionColumn_DisplayName();
 		}
 
 		@Override
@@ -43,7 +43,7 @@ public class MavenVersionColumn extends ListViewColumn {
 
 	@Override
 	public String getColumnCaption() {
-		return Messages.MavenVersionColumn_Description();
+		return Messages.MavenVersionColumn_DisplayName();
 	}
 
 }
