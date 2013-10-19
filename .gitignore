@@ -6,3 +6,5 @@ build
 .project
 #idea
 *.iml
+work
+**/.*.tmp
