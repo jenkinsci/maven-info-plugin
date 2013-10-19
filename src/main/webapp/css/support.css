@@ -1,0 +1,30 @@
+.mavenVersionColumn {
+	cursor: auto;
+}
+
+.mavenInfoPanel {
+	background-color: white;
+	border: 1px solid black;
+	z-index: 1000;
+	margin: auto;
+	padding: 2px 5px;
+}
+
+.mavenInfoPanel .groupIdHeader {
+	font-weight: bold;
+}
+
+.mavenInfoPanel .mavenModules {
+	padding-top: 2px;
+}
+
+.mavenInfoPanel .groupIdHeader {
+	font-weight: bold;
+	border-bottom: 1px solid;
+	padding-top: 2px;
+}
+
+.mavenInfoPanel .mainModule {
+	font-weight: bold;
+	font-style: italic;
+}
