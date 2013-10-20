@@ -26,6 +26,11 @@
       <name>Olivier Lamy</name>
       <email>olamy@apache.org</email>
     </developer>
+	<developer>
+      <id>emenaceb</id>
+      <name>Emlio Jose Mena Cebrian</name>
+      <email>emenaceb@gmail.com</email>
+    </developer>
   </developers>  
 
   <scm>
