@@ -1,6 +1,7 @@
 package jenkins.plugins.maveninfo.extractor;
 
 import hudson.FilePath;
+import hudson.maven.MavenBuild;
 import hudson.maven.MavenModule;
 import hudson.maven.MavenModuleSet;
 import hudson.maven.MavenModuleSetBuild;
@@ -14,6 +15,7 @@ import java.util.regex.Pattern;
 
 import jenkins.plugins.maveninfo.config.MavenInfoJobConfig;
 import jenkins.plugins.maveninfo.patches.Digester3;
+import jenkins.plugins.maveninfo.util.BuildUtils;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ExtendedBaseRules;
@@ -63,9 +65,9 @@ public class MavenInfoExtractor {
 			throws IOException, InterruptedException {
 		String projectName = null;
 
-		MavenModule parent = mms.getLastBuild().getParent().getRootModule();
-		if (parent != null) {
-			projectName = parent.getDisplayName();
+		MavenModule root = BuildUtils.getMainModule(mms);
+		if (root != null) {
+			projectName = root.getDisplayName();
 			mms.setDisplayNameOrNull(projectName);
 		}
 	}
@@ -88,11 +90,10 @@ public class MavenInfoExtractor {
 
 	private Map<String, String> parsePom(MavenModuleSet mms,
 			MavenModuleSetBuild mmsb) throws IOException, InterruptedException {
-		MavenModuleSet root = mms.getLastBuild().getParent();
-		String filePath = root.getRootPOM(mmsb.getEnvironment(null));
 
-		FilePath p = mmsb.getWorkspace().child(filePath);
-
+		MavenModule main = BuildUtils.getMainModule(mms);
+		MavenBuild build = mms.getLastBuild().getModuleLastBuilds().get(main);
+		FilePath p = build.getWorkspace().child("pom.xml");
 		Digester digester = new Digester3();
 		digester.setRules(new ExtendedBaseRules());
 
