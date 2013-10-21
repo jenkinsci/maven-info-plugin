@@ -6,11 +6,14 @@ import hudson.maven.MavenModuleSet;
 import hudson.model.JobProperty;
 import hudson.model.JobPropertyDescriptor;
 import hudson.model.Job;
+import hudson.util.FormValidation;
 import jenkins.plugins.maveninfo.l10n.Messages;
+import jenkins.plugins.maveninfo.util.InvalidPatternException;
 import jenkins.plugins.maveninfo.util.ModuleNamePattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 
 /**
  * Maven info extractor configuration.
@@ -33,6 +36,18 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 		public boolean isApplicable(Class<? extends Job> prj) {
 			return MavenModule.class.isAssignableFrom(prj)
 					|| MavenModuleSet.class.isAssignableFrom(prj);
+		}
+
+		public FormValidation doCheckMainModulePattern(
+				@QueryParameter String value) {
+
+			try {
+				new ModuleNamePattern(value);
+				return FormValidation.ok();
+			} catch (InvalidPatternException ex) {
+				return FormValidation.error(ex.getMessage());
+			}
+
 		}
 
 	}
