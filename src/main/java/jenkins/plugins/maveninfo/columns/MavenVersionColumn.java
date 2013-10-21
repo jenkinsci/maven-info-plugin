@@ -99,4 +99,22 @@ public class MavenVersionColumn extends ListViewColumn {
 		return m.getVersion();
 	}
 
+	public boolean isMultipleVersions(MavenModuleSet job) {
+		List<MavenModule> modules = BuildUtils.getModules(job);
+		if (modules.size() <= 1) {
+			return false;
+		}
+		String version = null;
+		for (MavenModule module : modules) {
+			if (!module.getVersion().equals(version)) {
+				if (version == null) {
+					version = module.getVersion();
+				} else {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 }
