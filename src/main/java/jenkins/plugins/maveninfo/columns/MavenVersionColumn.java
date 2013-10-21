@@ -3,20 +3,16 @@ package jenkins.plugins.maveninfo.columns;
 import hudson.Extension;
 import hudson.maven.MavenModule;
 import hudson.maven.MavenModuleSet;
-import hudson.maven.MavenModuleSetBuild;
 import hudson.views.ListViewColumnDescriptor;
 import hudson.views.ListViewColumn;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import jenkins.model.Jenkins;
-import jenkins.plugins.maveninfo.config.MavenInfoJobConfig;
 import jenkins.plugins.maveninfo.l10n.Messages;
-import jenkins.plugins.maveninfo.util.ModuleNamePattern;
+import jenkins.plugins.maveninfo.util.BuildUtils;
+import jenkins.plugins.maveninfo.util.MavenModuleComparator;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -51,15 +47,6 @@ public class MavenVersionColumn extends ListViewColumn {
 		}
 	}
 
-	private static class MavenModuleComparator implements
-			Comparator<MavenModule> {
-
-		public int compare(MavenModule o1, MavenModule o2) {
-
-			return o1.getModuleName().compareTo(o2.getModuleName());
-		}
-	}
-
 	@DataBoundConstructor
 	public MavenVersionColumn() {
 		super();
@@ -83,34 +70,6 @@ public class MavenVersionColumn extends ListViewColumn {
 		return Messages.MavenVersionColumn_DisplayName();
 	}
 
-	private MavenModule getMainModule(MavenModuleSet job) {
-
-		ModuleNamePattern pattern = null;
-		MavenInfoJobConfig cfg = job.getProperty(MavenInfoJobConfig.class);
-		if (cfg != null) {
-			pattern = cfg.getCompiledMainModulePattern();
-		}
-
-		MavenModule root = null;
-		if (pattern != null) {
-			List<MavenModule> modules = getModules(job);
-			Collections.sort(modules, new MavenModuleComparator());
-			for (MavenModule module : modules) {
-				if (pattern.matches(module.getModuleName())) {
-					root = module;
-					break;
-				}
-			}
-		}
-		if (root == null) {
-			MavenModuleSetBuild b = job.getLastBuild();
-			MavenModuleSet m = b.getParent();
-			root = m.getRootModule();
-		}
-		return root;
-
-	}
-
 	private JSONObject getModuleAsJson(MavenModule module) {
 		JSONObject json = new JSONObject();
 		json.accumulate("groupId", module.getModuleName().groupId);
@@ -121,8 +80,8 @@ public class MavenVersionColumn extends ListViewColumn {
 
 	private JSONObject getModuleList(MavenModuleSet job) {
 
-		MavenModule mainModule = getMainModule(job);
-		List<MavenModule> modules = getModules(job);
+		MavenModule mainModule = BuildUtils.getMainModule(job);
+		List<MavenModule> modules = BuildUtils.getModules(job);
 
 		Collections.sort(modules, new MavenModuleComparator());
 		JSONObject json = new JSONObject();
@@ -135,17 +94,8 @@ public class MavenVersionColumn extends ListViewColumn {
 		return json;
 	}
 
-	private List<MavenModule> getModules(MavenModuleSet job) {
-
-		Set<MavenModule> moduleSet = job.getLastBuild().getModuleLastBuilds()
-				.keySet();
-		List<MavenModule> modules = new ArrayList<MavenModule>(moduleSet);
-
-		return modules;
-	}
-
 	public String getVersion(MavenModuleSet job) {
-		MavenModule m = getMainModule(job);
+		MavenModule m = BuildUtils.getMainModule(job);
 		return m.getVersion();
 	}
 
