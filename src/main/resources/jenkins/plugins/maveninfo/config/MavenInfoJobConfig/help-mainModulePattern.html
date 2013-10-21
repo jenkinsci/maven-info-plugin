@@ -1,5 +1,11 @@
 Regular expression pattern to find module to extract versions, name, description, ....<br>
+<br>
+There are situations in wich you don't want to show root module's version. For example, when each module has its own version.<br>
+You can select which module is used for showing version column using this pattern. <br>
+<br>
 
+You can use wilcards or leave a part empty to match all groups (e.g: ":my-artifact", "*.base:parent", ...).<br>
 The pattern is checked against groupId:artifactId. <br>
-
+<i>Note: artifacts are ordered by groupId and artifactId and first matching module is used</i> <br>
+<br>
 If no module matches or pattern is empty, root module is used. 
