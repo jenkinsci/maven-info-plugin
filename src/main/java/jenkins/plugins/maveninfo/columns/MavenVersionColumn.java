@@ -67,7 +67,7 @@ public class MavenVersionColumn extends ListViewColumn {
 
 	@Override
 	public String getColumnCaption() {
-		return Messages.MavenVersionColumn_DisplayName();
+		return Messages.MavenVersionColumn_Caption();
 	}
 
 	private JSONObject getModuleAsJson(MavenModule module) {
