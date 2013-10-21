@@ -26,8 +26,11 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 	@Extension(ordinal = 100)
 	public static class JobConfigDescriptor extends JobPropertyDescriptor {
 
-		public FormValidation checkPattern(String value) {
+		public FormValidation checkPattern(String value, boolean optional) {
 
+			if (optional && StringUtils.isBlank(value)) {
+				return FormValidation.ok();
+			}
 			try {
 				new ModuleNamePattern(value);
 				return FormValidation.ok();
@@ -39,16 +42,16 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 
 		public FormValidation doCheckDescriptionPattern(
 				@QueryParameter String value) {
-			return checkPattern(value);
+			return checkPattern(value, true);
 		}
 
 		public FormValidation doCheckMainModulePattern(
 				@QueryParameter String value) {
-			return checkPattern(value);
+			return checkPattern(value, true);
 		}
 
 		public FormValidation doCheckNamePattern(@QueryParameter String value) {
-			return checkPattern(value);
+			return checkPattern(value, true);
 		}
 
 		@Override
