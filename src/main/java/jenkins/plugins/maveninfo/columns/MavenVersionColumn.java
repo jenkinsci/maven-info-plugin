@@ -1,28 +1,25 @@
 package jenkins.plugins.maveninfo.columns;
 
+import hudson.Extension;
+import hudson.maven.MavenModule;
+import hudson.maven.MavenModuleSet;
+import hudson.maven.MavenModuleSetBuild;
+import hudson.views.ListViewColumnDescriptor;
+import hudson.views.ListViewColumn;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-import hudson.Extension;
-import hudson.Util;
-import hudson.maven.AbstractMavenProject;
-import hudson.maven.ModuleName;
-import hudson.maven.MavenBuild;
-import hudson.maven.MavenModule;
-import hudson.maven.MavenModuleSet;
-import hudson.maven.MavenModuleSetBuild;
-import hudson.model.Job;
-import hudson.views.ListViewColumnDescriptor;
-import hudson.views.ListViewColumn;
 import jenkins.model.Jenkins;
+import jenkins.plugins.maveninfo.config.MavenInfoJobConfig;
 import jenkins.plugins.maveninfo.l10n.Messages;
+import jenkins.plugins.maveninfo.util.ModuleNamePattern;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.maven.project.MavenProject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
@@ -87,9 +84,29 @@ public class MavenVersionColumn extends ListViewColumn {
 	}
 
 	private MavenModule getMainModule(MavenModuleSet job) {
-		MavenModuleSetBuild b = job.getLastBuild();
-		MavenModuleSet m = b.getParent();
-		MavenModule root = m.getRootModule();
+
+		ModuleNamePattern pattern = null;
+		MavenInfoJobConfig cfg = job.getProperty(MavenInfoJobConfig.class);
+		if (cfg != null) {
+			pattern = cfg.getCompiledMainModulePattern();
+		}
+
+		MavenModule root = null;
+		if (pattern != null) {
+			List<MavenModule> modules = getModules(job);
+			Collections.sort(modules, new MavenModuleComparator());
+			for (MavenModule module : modules) {
+				if (pattern.matches(module.getModuleName())) {
+					root = module;
+					break;
+				}
+			}
+		}
+		if (root == null) {
+			MavenModuleSetBuild b = job.getLastBuild();
+			MavenModuleSet m = b.getParent();
+			root = m.getRootModule();
+		}
 		return root;
 
 	}

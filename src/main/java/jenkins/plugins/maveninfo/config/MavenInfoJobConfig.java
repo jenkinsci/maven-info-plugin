@@ -7,7 +7,9 @@ import hudson.model.JobProperty;
 import hudson.model.JobPropertyDescriptor;
 import hudson.model.Job;
 import jenkins.plugins.maveninfo.l10n.Messages;
+import jenkins.plugins.maveninfo.util.ModuleNamePattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -45,6 +47,8 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 
 	private String descriptionPattern;
 
+	private transient ModuleNamePattern compiledMainModulePattern;
+
 	public MavenInfoJobConfig() {
 		this("", true, "", true, "");
 	}
@@ -54,11 +58,15 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 			String namePattern, boolean assignDescription,
 			String descriptionPattern) {
 		super();
-		this.mainModulePattern = mainModulePattern;
-		this.assignName = assignName;
-		this.namePattern = namePattern;
-		this.assignDescription = assignDescription;
-		this.descriptionPattern = descriptionPattern;
+		setMainModulePattern(mainModulePattern);
+		setAssignName(assignName);
+		setNamePattern(namePattern);
+		setAssignDescription(assignDescription);
+		setDescriptionPattern(descriptionPattern);
+	}
+
+	public ModuleNamePattern getCompiledMainModulePattern() {
+		return compiledMainModulePattern;
 	}
 
 	public String getDescriptionPattern() {
@@ -93,8 +101,15 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 		this.descriptionPattern = descriptionPattern;
 	}
 
-	public void setMainModulePattern(String versionPattern) {
-		this.mainModulePattern = versionPattern;
+	public void setMainModulePattern(String mainModulePattern) {
+		if (StringUtils.isNotBlank(mainModulePattern)) {
+			this.mainModulePattern = mainModulePattern.trim();
+			this.compiledMainModulePattern = new ModuleNamePattern(
+					this.mainModulePattern);
+		} else {
+			this.mainModulePattern = "";
+			this.compiledMainModulePattern = null;
+		}
 	}
 
 	public void setNamePattern(String namePattern) {
