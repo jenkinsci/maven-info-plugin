@@ -1,0 +1,15 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
+	xmlns:i="jelly:fmt">
+	<td class="mavenVersionColumn">
+		<st:once>
+			<script>var mavenColumnStub =<st:bind value="${it}" /></script>
+			<link rel="stylesheet" type="text/css" href="${rootURL}/plugin/maven-info/css/support.css"></link>
+			<script type="text/javascript" src="${rootURL}/plugin/maven-info/js/support.js"></script>
+		</st:once>
+		${it.getVersion(job)}
+		<j:if test="${it.isMultipleVersions(job)}">
+			<abbr title="${%MultipleVersions}">*</abbr>
+		</j:if>
+	</td>
+</j:jelly>

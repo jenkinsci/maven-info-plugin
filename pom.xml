@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.403</version>
+    <version>1.500</version>
   </parent>
 
 
@@ -26,6 +26,11 @@
       <name>Olivier Lamy</name>
       <email>olamy@apache.org</email>
     </developer>
+	<developer>
+      <id>emenaceb</id>
+      <name>Emlio Jose Mena Cebrian</name>
+      <email>emenaceb@gmail.com</email>
+    </developer>
   </developers>  
 
   <scm>
@@ -39,6 +44,12 @@
       <groupId>org.jenkins-ci.main</groupId>
       <artifactId>maven-plugin</artifactId>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+    	<groupId>junit</groupId>
+    	<artifactId>junit</artifactId>
+    	<version>4.10</version>
+    	<scope>test</scope>
     </dependency>
   </dependencies>
   
