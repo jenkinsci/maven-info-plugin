@@ -26,6 +26,31 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 	@Extension(ordinal = 100)
 	public static class JobConfigDescriptor extends JobPropertyDescriptor {
 
+		public FormValidation checkPattern(String value) {
+
+			try {
+				new ModuleNamePattern(value);
+				return FormValidation.ok();
+			} catch (InvalidPatternException ex) {
+				return FormValidation.error(ex.getMessage());
+			}
+
+		}
+
+		public FormValidation doCheckDescriptionPattern(
+				@QueryParameter String value) {
+			return checkPattern(value);
+		}
+
+		public FormValidation doCheckMainModulePattern(
+				@QueryParameter String value) {
+			return checkPattern(value);
+		}
+
+		public FormValidation doCheckNamePattern(@QueryParameter String value) {
+			return checkPattern(value);
+		}
+
 		@Override
 		public String getDisplayName() {
 			return Messages.MavenInfoJobConfig_DisplayName();
@@ -36,18 +61,6 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 		public boolean isApplicable(Class<? extends Job> prj) {
 			return MavenModule.class.isAssignableFrom(prj)
 					|| MavenModuleSet.class.isAssignableFrom(prj);
-		}
-
-		public FormValidation doCheckMainModulePattern(
-				@QueryParameter String value) {
-
-			try {
-				new ModuleNamePattern(value);
-				return FormValidation.ok();
-			} catch (InvalidPatternException ex) {
-				return FormValidation.error(ex.getMessage());
-			}
-
 		}
 
 	}
