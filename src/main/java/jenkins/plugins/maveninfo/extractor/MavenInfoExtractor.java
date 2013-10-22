@@ -8,8 +8,9 @@ import hudson.maven.MavenModuleSetBuild;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,7 +20,9 @@ import jenkins.plugins.maveninfo.util.BuildUtils;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ExtendedBaseRules;
-import org.apache.commons.digester.Rule;
+import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
+import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.xml.sax.SAXException;
 
 /**
@@ -34,10 +37,12 @@ import org.xml.sax.SAXException;
  */
 public class MavenInfoExtractor {
 
-	private static final Pattern PATTERN_CLEAN = Pattern
-			.compile("\\s*([^\\r\\n]*)\\s*[\\n\\r]");
+	private static final String PROP_MAVEN_DESCRIPTION = "MAVEN_DESCRIPTION";
 
-	private Map<String, String> extractedInfo = new TreeMap<String, String>();
+	private static final String PROP_MAVEN_NAME = "MAVEN_NAME";
+
+	private static final Pattern PATTERN_CLEAN = Pattern.compile(
+			"\\s*([^\\r\\n]*)\\s*[\\n\\r]", Pattern.MULTILINE);
 
 	private MavenInfoJobConfig config;
 
@@ -46,50 +51,89 @@ public class MavenInfoExtractor {
 		this.config = config;
 	}
 
+	private void assignAll(MavenModuleSet mms, MavenModuleSetBuild mmsb,
+			Properties properties) throws IOException, InterruptedException {
+
+		if (config.isAssignName()) {
+			assignName(mms, mmsb, properties);
+		}
+
+		if (config.isAssignDescription()) {
+			assignDescription(mms, mmsb, properties);
+		}
+	}
+
+	private void assignDescription(MavenModuleSet mms,
+			MavenModuleSetBuild mmsb, Properties properties)
+			throws IOException, InterruptedException {
+
+		String description = toMultilineHtml(properties.getProperty(
+				PROP_MAVEN_DESCRIPTION, ""));
+		properties.put(PROP_MAVEN_DESCRIPTION, description);
+		String formatted = expandTemplate(config.getDescriptionTemplate(), mms,
+				mmsb, properties, description);
+		mms.setDescription(formatted);
+	}
+
+	private void assignName(MavenModuleSet mms, MavenModuleSetBuild mmsb,
+			Properties properties) throws IOException, InterruptedException {
+
+		String projectName = properties.getProperty(PROP_MAVEN_NAME, "");
+		String formatted = expandTemplate(config.getNameTemplate(), mms, mmsb,
+				properties, projectName);
+		mms.setDisplayNameOrNull(formatted);
+	}
+
+	private String expandTemplate(String template, MavenModuleSet mms,
+			MavenModuleSetBuild mmsb, Properties properties, String defaultValue)
+			throws IOException, InterruptedException {
+		String expanded = defaultValue;
+		if (StringUtils.isNotBlank(template)) {
+			try {
+				List<TokenMacro> macros = Collections
+						.singletonList((TokenMacro) new PropertiesTokenMacro(
+								properties));
+				expanded = TokenMacro.expandAll(mmsb, null,
+						config.getNameTemplate(), true, macros);
+
+			} catch (MacroEvaluationException ex) {
+
+			}
+		}
+		return expanded;
+	}
+
 	public void extract(MavenModuleSet mms, MavenModuleSetBuild mmsb)
 			throws IOException, InterruptedException {
+		Properties properties = new Properties();
+		findAll(mms, mmsb, properties);
+		assignAll(mms, mmsb, properties);
+	}
+
+	private boolean findAll(MavenModuleSet mms, MavenModuleSetBuild mmsb,
+			Properties properties) {
+
 		if (config.isAssignName()) {
-			assignName(mms, mmsb);
+			findName(mms, mmsb, properties);
 		}
+
 		try {
-			parsePom(mms, mmsb);
-			if (config.isAssignDescription()) {
-				assignDescription(mms, mmsb);
-			}
+			findFromPom(mms, mmsb, properties);
 		} catch (Exception ex) {
-			// ignore exceptions
+			return false;
+		}
+		return true;
+	}
+
+	private void findConfigurePomParser(Digester digester, Properties properties) {
+		if (config.isAssignDescription()) {
+			digester.addRule("project/description", new ExtractPropertyRule(
+					PROP_MAVEN_DESCRIPTION, properties));
 		}
 	}
 
-	private void assignName(MavenModuleSet mms, MavenModuleSetBuild mmsb)
-			throws IOException, InterruptedException {
-		String projectName = null;
-
-		MavenModule root = BuildUtils.getMainModule(mms);
-		if (root != null) {
-			projectName = root.getDisplayName();
-			mms.setDisplayNameOrNull(projectName);
-		}
-	}
-
-	private class ExtractPropRule extends Rule {
-
-		private String propertyName;
-
-		public ExtractPropRule(String propertyName) {
-			super();
-			this.propertyName = propertyName;
-		}
-
-		@Override
-		public void body(String namespace, String name, String text)
-				throws Exception {
-			extractedInfo.put(propertyName, text.trim());
-		}
-	}
-
-	private Map<String, String> parsePom(MavenModuleSet mms,
-			MavenModuleSetBuild mmsb) throws IOException, InterruptedException {
+	private void findFromPom(MavenModuleSet mms, MavenModuleSetBuild mmsb,
+			Properties properties) throws IOException, InterruptedException {
 
 		MavenModule main = BuildUtils.getMainModule(mms);
 		MavenBuild build = mms.getLastBuild().getModuleLastBuilds().get(main);
@@ -97,10 +141,7 @@ public class MavenInfoExtractor {
 		Digester digester = new Digester3();
 		digester.setRules(new ExtendedBaseRules());
 
-		if (config.isAssignDescription()) {
-			digester.addRule("project/description", new ExtractPropRule(
-					"description"));
-		}
+		findConfigurePomParser(digester, properties);
 
 		InputStream is = p.read();
 		try {
@@ -110,17 +151,21 @@ public class MavenInfoExtractor {
 		} finally {
 			is.close();
 		}
-		return extractedInfo;
 	}
 
-	private void assignDescription(MavenModuleSet mms, MavenModuleSetBuild mmsb)
-			throws IOException, InterruptedException {
+	private void findName(MavenModuleSet mms, MavenModuleSetBuild mmsb,
+			Properties properties) {
 
-		String description = extractedInfo.get("description");
-		if (description == null) {
-			description = "";
+		MavenModule main = BuildUtils.getMainModule(mms);
+		if (main != null) {
+			String projectName = main.getDisplayName();
+			properties.put(PROP_MAVEN_NAME, projectName);
 		}
-		Matcher m = PATTERN_CLEAN.matcher(description);
+
+	}
+
+	private String toMultilineHtml(String value) {
+		Matcher m = PATTERN_CLEAN.matcher(value);
 		StringBuffer sb = new StringBuffer();
 		while (m.find()) {
 
@@ -128,7 +173,7 @@ public class MavenInfoExtractor {
 			m.appendReplacement(sb, g + "<br>");
 		}
 		m.appendTail(sb);
-		mms.setDescription(sb.toString());
+		return sb.toString();
 	}
 
 }

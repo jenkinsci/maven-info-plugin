@@ -74,26 +74,32 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 
 	private String namePattern;
 
+	private String nameTemplate;
+
 	private boolean assignDescription;
 
 	private String descriptionPattern;
 
+	private String descriptionTemplate;
+
 	private transient ModuleNamePattern compiledMainModulePattern;
 
 	public MavenInfoJobConfig() {
-		this("", true, "", true, "");
+		this("", true, "", "", true, "", "");
 	}
 
 	@DataBoundConstructor
 	public MavenInfoJobConfig(String mainModulePattern, boolean assignName,
-			String namePattern, boolean assignDescription,
-			String descriptionPattern) {
+			String namePattern, String nameTemplate, boolean assignDescription,
+			String descriptionPattern, String descriptionTemplate) {
 		super();
 		setMainModulePattern(mainModulePattern);
 		setAssignName(assignName);
 		setNamePattern(namePattern);
+		setNameTemplate(nameTemplate);
 		setAssignDescription(assignDescription);
 		setDescriptionPattern(descriptionPattern);
+		setDescriptionTemplate(descriptionTemplate);
 	}
 
 	public ModuleNamePattern getCompiledMainModulePattern() {
@@ -104,12 +110,20 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 		return descriptionPattern;
 	}
 
+	public String getDescriptionTemplate() {
+		return descriptionTemplate;
+	}
+
 	public String getMainModulePattern() {
 		return mainModulePattern;
 	}
 
 	public String getNamePattern() {
 		return namePattern;
+	}
+
+	public String getNameTemplate() {
+		return nameTemplate;
 	}
 
 	public boolean isAssignDescription() {
@@ -132,6 +146,10 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 		this.descriptionPattern = descriptionPattern;
 	}
 
+	public void setDescriptionTemplate(String descriptionTemplate) {
+		this.descriptionTemplate = descriptionTemplate;
+	}
+
 	public void setMainModulePattern(String mainModulePattern) {
 		if (StringUtils.isNotBlank(mainModulePattern)) {
 			this.mainModulePattern = mainModulePattern.trim();
@@ -145,6 +163,10 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 
 	public void setNamePattern(String namePattern) {
 		this.namePattern = namePattern;
+	}
+
+	public void setNameTemplate(String nameTemplate) {
+		this.nameTemplate = nameTemplate;
 	}
 
 }
