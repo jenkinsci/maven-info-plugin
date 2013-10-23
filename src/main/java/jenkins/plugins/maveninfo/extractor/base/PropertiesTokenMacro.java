@@ -1,4 +1,4 @@
-package jenkins.plugins.maveninfo.extractor;
+package jenkins.plugins.maveninfo.extractor.base;
 
 import hudson.model.TaskListener;
 import hudson.model.AbstractBuild;
@@ -12,6 +12,12 @@ import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 
 import com.google.common.collect.ListMultimap;
 
+/**
+ * Token Macro for extracted properties substitution.
+ * 
+ * @author emenaceb
+ * 
+ */
 public class PropertiesTokenMacro extends TokenMacro {
 
 	private Properties properties;

@@ -1,9 +1,12 @@
-package jenkins.plugins.maveninfo.extractor;
+package jenkins.plugins.maveninfo.extractor.base;
 
 import java.util.Properties;
 
 import org.apache.commons.digester.Rule;
 
+/**
+ * Rule to extract a element's contents as a property.
+ */
 public class ExtractPropertyRule extends Rule {
 
 	private String propertyName;
