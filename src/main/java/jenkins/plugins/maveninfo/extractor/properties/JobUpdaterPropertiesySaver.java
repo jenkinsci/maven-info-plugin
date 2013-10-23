@@ -37,8 +37,7 @@ public class JobUpdaterPropertiesySaver extends AbstractPropertiesSaver {
 		if (config.isAssignDescription()) {
 
 			String value = mms.getDescription();
-			String newValue = expandPropertyMultiline(
-					config.getDescriptionTemplate(),
+			String newValue = expandPropertyPre(config.getDescriptionTemplate(),
 					MavenProperties.PROP_MAVEN_DESCRIPTION, context);
 			if (value == null || !newValue.equals(value)) {
 				mms.setDescription(newValue);
