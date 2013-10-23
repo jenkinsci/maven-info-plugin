@@ -27,14 +27,6 @@
 				<f:textbox />
 			</f:entry>
 
-			<f:entry title="${%NamePattern}" field="namePattern">
-				<f:textbox />
-			</f:entry>
-
-			<f:entry title="${%DescriptionPattern}" field="descriptionPattern">
-				<f:textbox />
-			</f:entry>
-
 		</f:advanced>
 
 	</f:section>

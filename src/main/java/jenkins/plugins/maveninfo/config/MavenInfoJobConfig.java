@@ -40,17 +40,8 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 
 		}
 
-		public FormValidation doCheckDescriptionPattern(
-				@QueryParameter String value) {
-			return checkPattern(value, true);
-		}
-
 		public FormValidation doCheckMainModulePattern(
 				@QueryParameter String value) {
-			return checkPattern(value, true);
-		}
-
-		public FormValidation doCheckNamePattern(@QueryParameter String value) {
 			return checkPattern(value, true);
 		}
 
@@ -72,42 +63,32 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 
 	private boolean assignName;
 
-	private String namePattern;
-
 	private String nameTemplate;
 
 	private boolean assignDescription;
-
-	private String descriptionPattern;
 
 	private String descriptionTemplate;
 
 	private transient ModuleNamePattern compiledMainModulePattern;
 
 	public MavenInfoJobConfig() {
-		this("", true, "", "", true, "", "");
+		this("", true, "", true, "");
 	}
 
 	@DataBoundConstructor
 	public MavenInfoJobConfig(String mainModulePattern, boolean assignName,
-			String namePattern, String nameTemplate, boolean assignDescription,
-			String descriptionPattern, String descriptionTemplate) {
+			String nameTemplate, boolean assignDescription,
+			String descriptionTemplate) {
 		super();
 		setMainModulePattern(mainModulePattern);
 		setAssignName(assignName);
-		setNamePattern(namePattern);
 		setNameTemplate(nameTemplate);
 		setAssignDescription(assignDescription);
-		setDescriptionPattern(descriptionPattern);
 		setDescriptionTemplate(descriptionTemplate);
 	}
 
 	public ModuleNamePattern getCompiledMainModulePattern() {
 		return compiledMainModulePattern;
-	}
-
-	public String getDescriptionPattern() {
-		return descriptionPattern;
 	}
 
 	public String getDescriptionTemplate() {
@@ -116,10 +97,6 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 
 	public String getMainModulePattern() {
 		return mainModulePattern;
-	}
-
-	public String getNamePattern() {
-		return namePattern;
 	}
 
 	public String getNameTemplate() {
@@ -142,10 +119,6 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 		this.assignName = assignName;
 	}
 
-	public void setDescriptionPattern(String descriptionPattern) {
-		this.descriptionPattern = descriptionPattern;
-	}
-
 	public void setDescriptionTemplate(String descriptionTemplate) {
 		this.descriptionTemplate = descriptionTemplate;
 	}
@@ -159,10 +132,6 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 			this.mainModulePattern = "";
 			this.compiledMainModulePattern = null;
 		}
-	}
-
-	public void setNamePattern(String namePattern) {
-		this.namePattern = namePattern;
 	}
 
 	public void setNameTemplate(String nameTemplate) {
