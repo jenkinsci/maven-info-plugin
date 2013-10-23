@@ -24,7 +24,7 @@
 			</f:entry>
 
 			<f:entry title="${%DescriptionTemplate}" field="descriptionTemplate">
-				<f:textbox />
+				<f:textarea />
 			</f:entry>
 
 		</f:advanced>
