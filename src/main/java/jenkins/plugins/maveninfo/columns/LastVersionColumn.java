@@ -26,7 +26,7 @@ import org.kohsuke.stapler.bind.JavaScriptMethod;
  * @author emenaceb
  * 
  */
-public class MavenVersionColumn extends ListViewColumn {
+public class LastVersionColumn extends ListViewColumn {
 
 	@Extension
 	public static class DescriptorImpl extends ListViewColumnDescriptor {
@@ -38,7 +38,7 @@ public class MavenVersionColumn extends ListViewColumn {
 		@Override
 		public ListViewColumn newInstance(StaplerRequest req, JSONObject obj)
 				throws hudson.model.Descriptor.FormException {
-			return new MavenVersionColumn();
+			return new LastVersionColumn();
 		}
 
 		@Override
@@ -48,7 +48,7 @@ public class MavenVersionColumn extends ListViewColumn {
 	}
 
 	@DataBoundConstructor
-	public MavenVersionColumn() {
+	public LastVersionColumn() {
 		super();
 	}
 
