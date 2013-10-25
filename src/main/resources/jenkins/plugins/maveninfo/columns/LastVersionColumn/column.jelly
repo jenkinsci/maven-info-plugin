@@ -3,7 +3,10 @@
 	xmlns:i="jelly:fmt" >
 	
 	<td class="mavenVersionColumn">
-		<st:include page="../common/resources.jelly"/>
+		<st:once>
+			<link rel="stylesheet" type="text/css" href="${rootURL}/plugin/maven-info/css/support.css"></link>
+			<script type="text/javascript" src="${rootURL}/plugin/maven-info/js/support.js"></script>
+		</st:once>
 		<st:once>
 			<script>var mavenColumnStub =<st:bind value="${it}" /></script>
 		</st:once>
