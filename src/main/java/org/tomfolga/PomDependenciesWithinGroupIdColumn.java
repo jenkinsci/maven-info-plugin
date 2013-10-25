@@ -2,6 +2,8 @@ package org.tomfolga;
 
 import hudson.Extension;
 import hudson.model.Descriptor;
+import hudson.model.Descriptor.FormException;
+import hudson.views.ListViewColumnDescriptor;
 import hudson.views.ListViewColumn;
 import net.sf.json.JSONObject;
 
@@ -21,7 +23,7 @@ public class PomDependenciesWithinGroupIdColumn extends
 	public static final Descriptor<ListViewColumn> DESCRIPTOR = new DescriptorImpl();
 
 	@Extension
-	public static class DescriptorImpl extends Descriptor<ListViewColumn> {
+	public static class DescriptorImpl extends ListViewColumnDescriptor {
 		@Override
 		public ListViewColumn newInstance(StaplerRequest req,
 				JSONObject formData) throws FormException {
@@ -31,6 +33,11 @@ public class PomDependenciesWithinGroupIdColumn extends
 		@Override
 		public String getDisplayName() {
 			return "Maven Dependencies (within groupId)";
+		}
+
+		@Override
+		public boolean shownByDefault() {
+			return false;
 		}
 
 	}
