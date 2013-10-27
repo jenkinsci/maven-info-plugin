@@ -3,6 +3,7 @@ package jenkins.plugins.maveninfo.columns;
 import hudson.Extension;
 import hudson.maven.MavenModule;
 import hudson.maven.MavenModuleSet;
+import hudson.maven.MavenModuleSetBuild;
 import hudson.views.ListViewColumnDescriptor;
 import hudson.views.ListViewColumn;
 
@@ -10,9 +11,11 @@ import java.util.Collections;
 import java.util.List;
 
 import jenkins.model.Jenkins;
+import jenkins.plugins.maveninfo.config.MavenInfoJobConfig;
 import jenkins.plugins.maveninfo.l10n.Messages;
 import jenkins.plugins.maveninfo.util.BuildUtils;
 import jenkins.plugins.maveninfo.util.MavenModuleComparator;
+import jenkins.plugins.maveninfo.util.ModuleNamePattern;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -65,6 +68,10 @@ public class LastVersionColumn extends ListViewColumn {
 		return new JSONObject();
 	}
 
+	protected MavenModuleSetBuild getBuild(MavenModuleSet job) {
+		return BuildUtils.getLastBuild(job);
+	}
+
 	@Override
 	public String getColumnCaption() {
 		return Messages.MavenVersionColumn_Caption();
@@ -80,8 +87,11 @@ public class LastVersionColumn extends ListViewColumn {
 
 	private JSONObject getModuleList(MavenModuleSet job) {
 
-		MavenModule mainModule = BuildUtils.getMainModule(job);
-		List<MavenModule> modules = BuildUtils.getModules(job);
+		MavenModuleSetBuild build = getBuild(job);
+		ModuleNamePattern mainPattern = getModulePattern(job);
+
+		MavenModule mainModule = BuildUtils.getMainModule(build, mainPattern);
+		List<MavenModule> modules = BuildUtils.getModules(build);
 
 		Collections.sort(modules, new MavenModuleComparator());
 		JSONObject json = new JSONObject();
@@ -94,13 +104,22 @@ public class LastVersionColumn extends ListViewColumn {
 		return json;
 	}
 
+	protected ModuleNamePattern getModulePattern(MavenModuleSet job) {
+		MavenInfoJobConfig cfg = BuildUtils.getJobConfig(job);
+		return cfg.getCompiledMainModulePattern();
+	}
+
 	public String getVersion(MavenModuleSet job) {
-		MavenModule m = BuildUtils.getMainModule(job);
+		MavenModuleSetBuild build = getBuild(job);
+		ModuleNamePattern mainPattern = getModulePattern(job);
+
+		MavenModule m = BuildUtils.getMainModule(build, mainPattern);
 		return m.getVersion();
 	}
 
 	public boolean isMultipleVersions(MavenModuleSet job) {
-		List<MavenModule> modules = BuildUtils.getModules(job);
+		MavenModuleSetBuild build = BuildUtils.getLastBuild(job);
+		List<MavenModule> modules = BuildUtils.getModules(build);
 		if (modules.size() <= 1) {
 			return false;
 		}
@@ -116,5 +135,4 @@ public class LastVersionColumn extends ListViewColumn {
 		}
 		return false;
 	}
-
 }

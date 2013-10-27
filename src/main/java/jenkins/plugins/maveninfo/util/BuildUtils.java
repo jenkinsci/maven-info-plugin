@@ -19,17 +19,21 @@ import jenkins.plugins.maveninfo.config.MavenInfoJobConfig;
  */
 public class BuildUtils {
 
-	public static MavenModule getMainModule(MavenModuleSet job) {
 
-		ModuleNamePattern pattern = null;
-		MavenInfoJobConfig cfg = job.getProperty(MavenInfoJobConfig.class);
-		if (cfg != null) {
-			pattern = cfg.getCompiledMainModulePattern();
-		}
+	public static MavenInfoJobConfig getJobConfig(MavenModuleSet job) {
+		return job.getProperty(MavenInfoJobConfig.class);
+	}
+
+	public static MavenModuleSetBuild getLastBuild(MavenModuleSet job) {
+		return job.getLastBuild();
+	}
+
+	public static MavenModule getMainModule(MavenModuleSetBuild build,
+			ModuleNamePattern pattern) {
 
 		MavenModule root = null;
 		if (pattern != null) {
-			List<MavenModule> modules = BuildUtils.getModules(job);
+			List<MavenModule> modules = BuildUtils.getModules(build);
 			Collections.sort(modules, new MavenModuleComparator());
 			for (MavenModule module : modules) {
 				if (pattern.matches(module.getModuleName())) {
@@ -39,18 +43,16 @@ public class BuildUtils {
 			}
 		}
 		if (root == null) {
-			MavenModuleSetBuild b = job.getLastBuild();
-			MavenModuleSet m = b.getParent();
+			MavenModuleSet m = build.getParent();
 			root = m.getRootModule();
 		}
 		return root;
 
 	}
 
-	public static List<MavenModule> getModules(MavenModuleSet job) {
+	public static List<MavenModule> getModules(MavenModuleSetBuild build) {
 
-		Set<MavenModule> moduleSet = job.getLastBuild().getModuleLastBuilds()
-				.keySet();
+		Set<MavenModule> moduleSet = build.getModuleLastBuilds().keySet();
 		List<MavenModule> modules = new ArrayList<MavenModule>(moduleSet);
 
 		return modules;
