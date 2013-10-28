@@ -2,9 +2,9 @@ package org.tomfolga;
 
 import hudson.Extension;
 import hudson.model.Descriptor;
-import hudson.model.Descriptor.FormException;
 import hudson.views.ListViewColumnDescriptor;
 import hudson.views.ListViewColumn;
+import jenkins.plugins.maveninfo.l10n.Messages;
 import net.sf.json.JSONObject;
 
 import org.kohsuke.stapler.StaplerRequest;
@@ -27,12 +27,12 @@ public class PomDependenciesWithinGroupIdColumn extends
 		@Override
 		public ListViewColumn newInstance(StaplerRequest req,
 				JSONObject formData) throws FormException {
-			return new PomDependenciesWithinGroupIdColumn(getDisplayName());
+			return new PomDependenciesWithinGroupIdColumn(Messages.PomDependenciesWithinGroupIdColumn_Caption());
 		}
 
 		@Override
 		public String getDisplayName() {
-			return "Maven Dependencies (within groupId)";
+			return Messages.PomDependenciesWithinGroupIdColumn_DisplayName();
 		}
 
 		@Override

@@ -1,5 +1,6 @@
 package org.tomfolga;
 
+import jenkins.plugins.maveninfo.l10n.Messages;
 import hudson.Extension;
 import hudson.model.Descriptor;
 import hudson.model.Descriptor.FormException;
@@ -40,12 +41,12 @@ public class PomModulesFullColumn extends AbstractPomModulesColumn {
 		public ListViewColumn newInstance(StaplerRequest req,
 				JSONObject formData) throws FormException {
 
-			return new PomModulesFullColumn(getDisplayName());
+			return new PomModulesFullColumn(Messages.PomModulesFullColumn_Caption());
 		}
 
 		@Override
 		public String getDisplayName() {
-			return "Maven Modules (Full)";
+			return Messages.PomModulesFullColumn_DisplayName();
 		}
 
 		@Override

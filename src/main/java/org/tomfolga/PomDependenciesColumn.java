@@ -1,5 +1,6 @@
 package org.tomfolga;
 
+import jenkins.plugins.maveninfo.l10n.Messages;
 import hudson.Extension;
 import hudson.model.Descriptor;
 import hudson.model.Descriptor.FormException;
@@ -7,6 +8,7 @@ import hudson.views.ListViewColumnDescriptor;
 import hudson.views.ListViewColumn;
 import net.sf.json.JSONObject;
 
+import org.jfree.data.statistics.MeanAndStandardDeviation;
 import org.kohsuke.stapler.StaplerRequest;
 
 public class PomDependenciesColumn extends AbstractPomDependenciesColumn {
@@ -26,12 +28,12 @@ public class PomDependenciesColumn extends AbstractPomDependenciesColumn {
 		@Override
 		public ListViewColumn newInstance(StaplerRequest req,
 				JSONObject formData) throws FormException {
-			return new PomDependenciesColumn(getDisplayName());
+			return new PomDependenciesColumn(Messages.PomDependenciesColumn_Caption());
 		}
 
 		@Override
 		public String getDisplayName() {
-			return "Maven Dependencies";
+			return Messages.PomDependenciesColumn_DisplayName();
 		}
 
 		@Override

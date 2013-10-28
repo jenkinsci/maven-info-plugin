@@ -1,5 +1,6 @@
 package org.tomfolga;
 
+import jenkins.plugins.maveninfo.l10n.Messages;
 import hudson.Extension;
 import hudson.model.Descriptor;
 import hudson.model.Descriptor.FormException;
@@ -40,12 +41,12 @@ public class PomModulesVersionColumn extends AbstractPomModulesColumn {
 		public ListViewColumn newInstance(StaplerRequest req,
 				JSONObject formData) throws FormException {
 
-			return new PomModulesVersionColumn(getDisplayName());
+			return new PomModulesVersionColumn(Messages.PomModulesVersionColumn_Caption());
 		}
 
 		@Override
 		public String getDisplayName() {
-			return "Maven Modules (Version)";
+			return Messages.PomModulesVersionColumn_DisplayName();
 		}
 
 		@Override
