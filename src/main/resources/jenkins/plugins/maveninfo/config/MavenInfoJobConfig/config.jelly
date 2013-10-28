@@ -31,8 +31,10 @@
 			<f:entry title="${%MainModulePattern}" field="mainModulePattern">
 				<f:textbox />
 			</f:entry>
-
-
+			
+			<f:entry title="${%DependenciesPattern}" field="dependenciesPattern">
+				<f:textbox />
+			</f:entry>
 
 		</f:advanced>
 

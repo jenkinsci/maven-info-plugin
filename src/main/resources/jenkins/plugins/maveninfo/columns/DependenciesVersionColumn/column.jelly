@@ -1,0 +1,12 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
+	xmlns:i="jelly:fmt" xmlns:mi="jenkins/plugins/maveninfo/lib">
+	
+	<td class="mavenDependencyColumn">
+		<mi:common-columns />
+		${it.getVersion(job)}
+		<j:if test="${it.isMultipleVersions(job)}">
+			<abbr title="${%MultipleVersions}">*</abbr>
+		</j:if>
+	</td>
+</j:jelly>

@@ -61,6 +61,8 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 
 	private String mainModulePattern;
 
+	private String dependenciesPattern;
+
 	private boolean assignName;
 
 	private String nameTemplate;
@@ -71,24 +73,36 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 
 	private transient ModuleNamePattern compiledMainModulePattern;
 
+	private transient ModuleNamePattern compiledDependenciesPattern;
+
 	public MavenInfoJobConfig() {
-		this("", true, "", true, "");
+		this("", "", true, "", true, "");
 	}
 
 	@DataBoundConstructor
-	public MavenInfoJobConfig(String mainModulePattern, boolean assignName,
+	public MavenInfoJobConfig(String mainModulePattern,
+			String dependenciesPattern, boolean assignName,
 			String nameTemplate, boolean assignDescription,
 			String descriptionTemplate) {
 		super();
 		setMainModulePattern(mainModulePattern);
+		setDependenciesPattern(dependenciesPattern);
 		setAssignName(assignName);
 		setNameTemplate(nameTemplate);
 		setAssignDescription(assignDescription);
 		setDescriptionTemplate(descriptionTemplate);
 	}
 
+	public ModuleNamePattern getCompiledDependenciesPattern() {
+		return compiledDependenciesPattern;
+	}
+
 	public ModuleNamePattern getCompiledMainModulePattern() {
 		return compiledMainModulePattern;
+	}
+
+	public String getDependenciesPattern() {
+		return dependenciesPattern;
 	}
 
 	public String getDescriptionTemplate() {
@@ -117,6 +131,17 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 
 	public void setAssignName(boolean assignName) {
 		this.assignName = assignName;
+	}
+
+	public void setDependenciesPattern(String dependenciesPattern) {
+		if (StringUtils.isNotBlank(dependenciesPattern)) {
+			this.dependenciesPattern = dependenciesPattern.trim();
+			this.compiledDependenciesPattern = new ModuleNamePattern(
+					this.dependenciesPattern);
+		} else {
+			this.dependenciesPattern = "";
+			this.compiledDependenciesPattern = null;
+		}
 	}
 
 	public void setDescriptionTemplate(String descriptionTemplate) {
