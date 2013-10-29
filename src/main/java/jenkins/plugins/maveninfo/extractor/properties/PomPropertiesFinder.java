@@ -45,7 +45,7 @@ public class PomPropertiesFinder implements PropertiesFinder {
 		try {
 			digester.parse(is);
 		} catch (SAXException ex) {
-			throw new IOException("Can't read POM");
+			throw new IOException("Can't read POM: " + p.toString());
 		} finally {
 			is.close();
 		}
