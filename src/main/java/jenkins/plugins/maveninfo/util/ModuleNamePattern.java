@@ -31,7 +31,7 @@ public class ModuleNamePattern {
 		Matcher splitter = PATTERN_PARTS.matcher(pattern);
 		if (!splitter.matches()) {
 			throw new InvalidPatternException(
-					"Patterns are of the form groupIdFilter:artifactIdFilter");
+					"Patterns are of the form groupIdFilter:artifactIdFilter: '" + pattern + "'");
 		}
 
 		String groupPattern = splitter.group(1);
