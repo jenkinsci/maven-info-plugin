@@ -2,10 +2,10 @@
 	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
 	xmlns:i="jelly:fmt" xmlns:mi="jenkins/plugins/maveninfo/lib">
 	
-	<td class="mavenVersionColumn">
+	<td class="mavenLastVersionColumn">
 		<mi:common-columns />
 		<st:once>
-			<script>var mavenColumnStub =<st:bind value="${it}" /></script>
+			<script>MavenInfoPlugin.stub.lastVersion =<st:bind value="${it}" /></script>
 		</st:once>
 		${it.getVersion(job)}
 		<j:if test="${it.isMultipleVersions(job)}">

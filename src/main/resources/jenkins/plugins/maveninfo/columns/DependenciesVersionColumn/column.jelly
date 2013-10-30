@@ -2,8 +2,11 @@
 	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
 	xmlns:i="jelly:fmt" xmlns:mi="jenkins/plugins/maveninfo/lib">
 	
-	<td class="mavenDependencyColumn">
+	<td class="mavenDependenciesColumn">
 		<mi:common-columns />
+		<st:once>
+			<script>MavenInfoPlugin.stub.dependenciesVersion =<st:bind value="${it}" /></script>
+		</st:once>		
 		${it.getVersion(job)}
 		<j:if test="${it.isMultipleVersions(job)}">
 			<abbr title="${%MultipleVersions}">*</abbr>

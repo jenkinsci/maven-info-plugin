@@ -7,12 +7,17 @@ var MavenInfoPlugin = (function(window, undefined) {
 	var overlay = new YAHOO.widget.Overlay("MavenVersionInfoPanel");
 	overlay.cfg.setProperty("visible", false);
 
-	getJobId = function(element) {
+	var getJobId = function(element) {
 		var td = $(element).up("tr");
 		return td.id.substring(4);
 	};
-
-	createInfoPanel = function(info) {
+	
+	var hideInfo = function(element) {
+		overlay.cfg.setProperty("visible", false);
+	};
+	
+	
+	var createLastVersionPanel = function(info) {
 		var panel = "";
 		var mainVersion = info.mainModule.version;
 		var mainGroupId = info.mainModule.groupId;
@@ -58,40 +63,105 @@ var MavenInfoPlugin = (function(window, undefined) {
 		panel += '</div>\n';
 		return panel;
 	}
-
-	showInfo = function(element) {
-		if (mavenColumnStub) {
-			var jobId = getJobId(element);
-			mavenColumnStub.getAjaxModuleList(jobId, function(response) {
-				var info = response.responseObject();
-				var txt = createInfoPanel(info)
-				var old = $("MavenVersionInfoPanel");
-				if (old) {
-					old.innerHTML = txt;
-					overlay.cfg.setProperty("context", [ element, "tl", "bl",
-							[ "beforeShow", "windowResize" ], [ -2, -2 ] ]);
-					overlay.cfg.setProperty("visible", true);
+	
+	var createDependenciesVersionPanel = function(info) {
+		var panel = "";
+		panel += '<div class="mavenInfoPanel">\n';
+		var mainVersion = info.version;
+		if (info.dependencies.length > 1) {
+			panel += '<div class="mavenModules">\n';
+			var currentGroup = "";
+			info.dependencies.each(function(module) {
+				if (module.groupId != currentGroup) {
+					if (currentGroup != "") {
+						panel += '</div>\n';
+					}
+					currentGroup = module.groupId;
+					panel += '<div class="groupId">\n';
+					panel += '<div class="groupIdHeader">' + module.groupId
+							+ '</div>\n';
 				}
 
+				panel += module.artifactId;
+				if(module.versions.length == 1) {
+					if(module.versions[0] != mainVersion) {
+						panel += " [" + module.versions[0] + "]";
+					}
+				} else if (module.versions.length > 1) {
+					var hasMore = false ;
+					panel += " [" ;
+					module.versions.each(function (version) {
+						if(hasMore) { panel += ", "; } 
+						panel += version ;
+						hasMore = true;
+					});
+					panel += "]";
+				}
+				panel += "<br>\n";
 			});
+			panel += '</div>\n';
+			panel += '</div>\n';
+		}
+		panel += '</div>\n';
+		return panel;
+	}
+
+	var showPanel = function(element, txt) {
+		var old = $("MavenVersionInfoPanel");
+		if (old) {
+			old.innerHTML = txt;
+			overlay.cfg.setProperty("context", [ element, "tl", "bl",
+					[ "beforeShow", "windowResize" ], [ -2, -2 ] ]);
+			overlay.cfg.setProperty("visible", true);
+		}
+	}
+	
+	var types =  {
+		lastVersion : {
+			method: "getAjaxModuleList",
+			create: createLastVersionPanel
+		},
+		dependenciesVersion : {
+			method: "getAjaxDependenciesList",
+			create: createDependenciesVersionPanel
+		}
+	}
+	
+
+	
+	var showInfo = function(element, typeName) {
+		var type = types[typeName] ;
+		var stub = MavenInfoPlugin.stub[typeName] ;
+		
+		if (stub) {
+			var jobId = getJobId(element);
+			if(type.method) {
+				stub[type.method](jobId, function(response) {
+					var info = response.responseObject();
+					var txt = type.create(info)
+					showPanel(element, txt);
+				});
+			}
 		}
 	};
 
-	hideInfo = function(element) {
-		overlay.cfg.setProperty("visible", false);
-	};
 
-	Behaviour.specify('td.mavenVersionColumn', 'showInfo', 10,
-			function(element) {
+	Behaviour.specify('td.mavenLastVersionColumn', 'lastVersion', 10,
+		function(element) {
+			element.onmouseover = function(ev) { showInfo(element, "lastVersion"); };
+			element.onmouseout =  function(ev) { hideInfo(element); };
+		});
+	
+	Behaviour.specify('td.mavenDependenciesColumn', 'dependenciesVersion', 10,
+		function(element) {
+			element.onmouseover = function(ev) { showInfo(element, "dependenciesVersion"); };
+			element.onmouseout =  function(ev) { hideInfo(element); };
+		});
 
-				element.onmouseover = function(ev) {
-					showInfo(element);
-				};
-
-				element.onmouseout = function(ev) {
-					hideInfo(element);
-				};
-
-			});
-
+	return {
+		stub : {
+			lastVersion : null,
+			dependenciesVersion : null
+		}
+	}
 })(window);
