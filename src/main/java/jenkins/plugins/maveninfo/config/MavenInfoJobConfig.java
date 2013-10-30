@@ -94,10 +94,24 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 	}
 
 	public ModuleNamePattern getCompiledDependenciesPattern() {
+		if (this.compiledDependenciesPattern == null
+				&& StringUtils.isNotBlank(dependenciesPattern)) {
+
+			this.compiledDependenciesPattern = new ModuleNamePattern(
+					this.dependenciesPattern);
+
+		}
 		return compiledDependenciesPattern;
 	}
 
 	public ModuleNamePattern getCompiledMainModulePattern() {
+		if (this.compiledMainModulePattern == null
+				&& StringUtils.isNotBlank(mainModulePattern)) {
+
+			this.compiledMainModulePattern = new ModuleNamePattern(
+					this.mainModulePattern);
+
+		}
 		return compiledMainModulePattern;
 	}
 
@@ -136,12 +150,10 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 	public void setDependenciesPattern(String dependenciesPattern) {
 		if (StringUtils.isNotBlank(dependenciesPattern)) {
 			this.dependenciesPattern = dependenciesPattern.trim();
-			this.compiledDependenciesPattern = new ModuleNamePattern(
-					this.dependenciesPattern);
 		} else {
 			this.dependenciesPattern = "";
-			this.compiledDependenciesPattern = null;
 		}
+		this.compiledDependenciesPattern = null;
 	}
 
 	public void setDescriptionTemplate(String descriptionTemplate) {
@@ -151,12 +163,10 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 	public void setMainModulePattern(String mainModulePattern) {
 		if (StringUtils.isNotBlank(mainModulePattern)) {
 			this.mainModulePattern = mainModulePattern.trim();
-			this.compiledMainModulePattern = new ModuleNamePattern(
-					this.mainModulePattern);
 		} else {
 			this.mainModulePattern = "";
-			this.compiledMainModulePattern = null;
 		}
+		this.compiledMainModulePattern = null;
 	}
 
 	public void setNameTemplate(String nameTemplate) {
