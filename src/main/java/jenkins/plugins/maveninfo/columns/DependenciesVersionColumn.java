@@ -30,7 +30,7 @@ import org.kohsuke.stapler.bind.JavaScriptMethod;
  * @author emenaceb
  * 
  */
-public class DependenciesVersionColumn extends ListViewColumn {
+public class DependenciesVersionColumn extends AbstractMavenInfoColumn {
 
 	@Extension
 	public static class DescriptorImpl extends ListViewColumnDescriptor {
@@ -40,57 +40,14 @@ public class DependenciesVersionColumn extends ListViewColumn {
 		}
 
 		@Override
-		public ListViewColumn newInstance(StaplerRequest req, JSONObject obj)
-				throws hudson.model.Descriptor.FormException {
-			return new DependenciesVersionColumn();
-		}
-
-		@Override
 		public boolean shownByDefault() {
 			return false;
 		}
 	}
 
 	@DataBoundConstructor
-	public DependenciesVersionColumn() {
-		super();
-	}
-
-	protected MavenModuleSetBuild getBuild(MavenModuleSet job) {
-		return BuildUtils.getLastBuild(job);
-	}
-
-	@Override
-	public String getColumnCaption() {
-		return Messages.DependenciesVersionColumn_Caption();
-	}
-
-	protected ModuleNamePattern getDependencyFilter(MavenModuleSet job) {
-		MavenInfoJobConfig cfg = BuildUtils.getJobConfig(job);
-		return cfg.getCompiledDependenciesPattern();
-	}
-
-	public String getVersion(MavenModuleSet job) {
-		SortedSet<String> versions = getVersions(job);
-		return findVersion(versions);
-	}
-
-	private SortedSet<String> getVersions(MavenModuleSet job) {
-		MavenModuleSetBuild build = getBuild(job);
-		ModuleNamePattern pattern = getDependencyFilter(job);
-
-		List<Dependency> dependencies = BuildUtils.getModuleDependencies(build,
-				pattern);
-
-		return findVersions(dependencies);
-	}
-
-	private SortedSet<String> findVersions(List<Dependency> dependencies) {
-		SortedSet<String> versions = new TreeSet<String>();
-		for (Dependency d : dependencies) {
-			versions.addAll(d.getVersions());
-		}
-		return versions;
+	public DependenciesVersionColumn(String columnName) {
+		super(columnName);
 	}
 
 	private String findVersion(SortedSet<String> versions) {
@@ -101,9 +58,12 @@ public class DependenciesVersionColumn extends ListViewColumn {
 		return version;
 	}
 
-	public boolean isMultipleVersions(MavenModuleSet job) {
-		SortedSet<String> versions = getVersions(job);
-		return versions.size() > 1;
+	private SortedSet<String> findVersions(List<Dependency> dependencies) {
+		SortedSet<String> versions = new TreeSet<String>();
+		for (Dependency d : dependencies) {
+			versions.addAll(d.getVersions());
+		}
+		return versions;
 	}
 
 	@JavaScriptMethod
@@ -117,6 +77,10 @@ public class DependenciesVersionColumn extends ListViewColumn {
 			}
 		}
 		return new JSONObject();
+	}
+
+	protected MavenModuleSetBuild getBuild(MavenModuleSet job) {
+		return BuildUtils.getLastBuild(job);
 	}
 
 	private JSONObject getDependenciesList(MavenModuleSet job) {
@@ -146,5 +110,30 @@ public class DependenciesVersionColumn extends ListViewColumn {
 		response.accumulate("dependencies", deps);
 
 		return response;
+	}
+
+	protected ModuleNamePattern getDependencyFilter(MavenModuleSet job) {
+		MavenInfoJobConfig cfg = BuildUtils.getJobConfig(job);
+		return cfg.getCompiledDependenciesPattern();
+	}
+
+	public String getVersion(MavenModuleSet job) {
+		SortedSet<String> versions = getVersions(job);
+		return findVersion(versions);
+	}
+
+	private SortedSet<String> getVersions(MavenModuleSet job) {
+		MavenModuleSetBuild build = getBuild(job);
+		ModuleNamePattern pattern = getDependencyFilter(job);
+
+		List<Dependency> dependencies = BuildUtils.getModuleDependencies(build,
+				pattern);
+
+		return findVersions(dependencies);
+	}
+
+	public boolean isMultipleVersions(MavenModuleSet job) {
+		SortedSet<String> versions = getVersions(job);
+		return versions.size() > 1;
 	}
 }

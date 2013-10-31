@@ -29,7 +29,7 @@ import org.kohsuke.stapler.bind.JavaScriptMethod;
  * @author emenaceb
  * 
  */
-public class LastVersionColumn extends ListViewColumn {
+public class LastVersionColumn extends AbstractMavenInfoColumn {
 
 	@Extension
 	public static class DescriptorImpl extends ListViewColumnDescriptor {
@@ -38,11 +38,6 @@ public class LastVersionColumn extends ListViewColumn {
 			return Messages.MavenVersionColumn_DisplayName();
 		}
 
-		@Override
-		public ListViewColumn newInstance(StaplerRequest req, JSONObject obj)
-				throws hudson.model.Descriptor.FormException {
-			return new LastVersionColumn();
-		}
 
 		@Override
 		public boolean shownByDefault() {
@@ -50,9 +45,10 @@ public class LastVersionColumn extends ListViewColumn {
 		}
 	}
 
+
 	@DataBoundConstructor
-	public LastVersionColumn() {
-		super();
+	public LastVersionColumn(String columnName) {
+		super(columnName);
 	}
 
 	@JavaScriptMethod
@@ -70,11 +66,6 @@ public class LastVersionColumn extends ListViewColumn {
 
 	protected MavenModuleSetBuild getBuild(MavenModuleSet job) {
 		return BuildUtils.getLastBuild(job);
-	}
-
-	@Override
-	public String getColumnCaption() {
-		return Messages.MavenVersionColumn_Caption();
 	}
 
 	private JSONObject getModuleAsJson(MavenModule module) {
@@ -134,5 +125,19 @@ public class LastVersionColumn extends ListViewColumn {
 			}
 		}
 		return false;
+	}
+	/**
+	 * Deserialization method to ensure compatibility.
+	 * @return
+	 */
+	public Object readResolve() {
+		
+		// 0.0.5 -> 0.1.0 added column name to object fields
+		// Keep caption
+		if(getColumnName() == null) {
+			setColumnName(Messages.MavenVersionColumn_Caption());
+		}
+		
+		return this ;
 	}
 }
