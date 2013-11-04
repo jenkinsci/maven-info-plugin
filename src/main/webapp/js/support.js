@@ -68,7 +68,7 @@ var MavenInfoPlugin = (function(window, undefined) {
 		var panel = "";
 		panel += '<div class="mavenInfoPanel">\n';
 		var mainVersion = info.version;
-		if (info.dependencies.length > 1) {
+		if (info.dependencies.length > 0) {
 			panel += '<div class="mavenModules">\n';
 			var currentGroup = "";
 			info.dependencies.each(function(module) {
