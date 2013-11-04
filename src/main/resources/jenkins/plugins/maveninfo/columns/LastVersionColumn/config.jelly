@@ -3,7 +3,7 @@
 	xmlns:i="jelly:fmt">
 
 	<f:entry title="${%ColumnCaption}" field="columnName">
-		<f:textbox />
+		<f:textbox default="${%DefaultCaption}"/>
 	</f:entry>
 
 </j:jelly>
