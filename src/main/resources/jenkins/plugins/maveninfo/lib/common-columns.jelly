@@ -3,8 +3,8 @@
 	xmlns:i="jelly:fmt">
 	
 	<st:once>
-		<link rel="stylesheet" type="text/css" href="${rootURL}/plugin/maven-info/css/support.css"></link>
-		<script type="text/javascript" src="${rootURL}/plugin/maven-info/js/support.js"></script>
+		<link rel="stylesheet" type="text/css" href="${resURL}/plugin/maven-info/css/support.css"></link>
+		<script type="text/javascript" src="${resURL}/plugin/maven-info/js/support.js"></script>
 	</st:once>
 	
 </j:jelly>
