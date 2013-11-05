@@ -2,7 +2,8 @@
 var MavenInfoPlugin = (function(window, undefined) {
 
 	var overlay, getJobId, hideInfo, createLastVersionPanel, 
-		createDependenciesVersionPanel, showPanel, types, showInfo;
+		createDependenciesVersionPanel, showPanel, types, showInfo
+		delayTimer = null, delayId = "";
 	
 	$$('body')[0].insert({
 		top : '<div id="MavenVersionInfoPanel"></div>'
@@ -16,9 +17,7 @@ var MavenInfoPlugin = (function(window, undefined) {
 		return td.id.substring(4);
 	};
 	
-	hideInfo = function(element) {
-		overlay.cfg.setProperty("visible", false);
-	};
+	
 	
 	
 	createLastVersionPanel = function(info) {
@@ -135,7 +134,7 @@ var MavenInfoPlugin = (function(window, undefined) {
 	
 
 	
-	showInfo = function(element, typeName) {
+	showInfoReal = function(element, typeName) {
 		var type, stub, jobId;
 		type = types[typeName] ;
 		stub = MavenInfoPlugin.stub[typeName] ;
@@ -152,24 +151,55 @@ var MavenInfoPlugin = (function(window, undefined) {
 			}
 		}
 	};
+	
+	showInfo = function(element, typeName) {
+		var jobId, name;
+		jobId = getJobId(element);
+		name = typeName + ":" + jobId ;
+		
+		if(delayTimer != null) {
+			if(delayId == name) {
+				return ;
+			}
+			clearTimeout(delayTimer) ;
+			delayTimer = null ;
+		} 
+		
+		delayId = name ;
+		delayTimer = setTimeout(function() {showInfoReal(element, typeName)}, MavenInfoPlugin.delay) ;
+	}
+	
+	hideInfo = function(element, typeName) {
+		var jobId, name;
+		jobId = getJobId(element);
+		name = typeName + ":" + jobId ;
+		
+		if(delayTimer != null && delayId == name) {
+			clearTimeout(delayTimer) ;
+			delayTimer = null ;
+		}
+		overlay.cfg.setProperty("visible", false);
+	};
 
 
 	Behaviour.specify('td.mavenLastVersionColumn', 'lastVersion', 10,
 		function(element) {
 			element.onmouseover = function(ev) { showInfo(element, "lastVersion"); };
-			element.onmouseout =  function(ev) { hideInfo(element); };
+			element.onmouseout =  function(ev) { hideInfo(element, "lastVersion"); };
 		});
 	
 	Behaviour.specify('td.mavenDependenciesColumn', 'dependenciesVersion', 10,
 		function(element) {
 			element.onmouseover = function(ev) { showInfo(element, "dependenciesVersion"); };
-			element.onmouseout =  function(ev) { hideInfo(element); };
+			element.onmouseout =  function(ev) { hideInfo(element, "dependenciesVersion"); };
 		});
 
 	return {
 		stub : {
 			lastVersion : null,
-			dependenciesVersion : null
-		}
+			dependenciesVersion : null,
+			
+		},
+		delay: 800
 	}
 })(window);
