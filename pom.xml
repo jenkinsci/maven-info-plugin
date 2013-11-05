@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -54,6 +55,9 @@
 			<version>1.7</version>
 		</dependency>
 
+		<!-- <dependency> <groupId>org.jenkins-ci.plugins.m2release</groupId> <artifactId>m2release</artifactId> 
+			<version>0.12.0</version> <optional>true</optional> </dependency> -->
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -87,10 +91,39 @@
 		</pluginRepository>
 	</pluginRepositories>
 
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<version>1.3.3</version>
+
+				<configuration>
+					<excludeResources>true</excludeResources>
+				</configuration>
+
+				<executions>
+					<execution>
+						<id>compress_js</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>compress</goal>
+						</goals>
+						<inherited>false</inherited>
+						<configuration>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+
+	</build>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	
+
 </project>  
   
 

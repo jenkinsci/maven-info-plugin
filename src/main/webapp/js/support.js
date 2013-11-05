@@ -1,27 +1,32 @@
 /* Support Js */
 var MavenInfoPlugin = (function(window, undefined) {
 
+	var overlay, getJobId, hideInfo, createLastVersionPanel, 
+		createDependenciesVersionPanel, showPanel, types, showInfo;
+	
 	$$('body')[0].insert({
 		top : '<div id="MavenVersionInfoPanel"></div>'
 	});
-	var overlay = new YAHOO.widget.Overlay("MavenVersionInfoPanel");
+	
+	overlay = new YAHOO.widget.Overlay("MavenVersionInfoPanel");
 	overlay.cfg.setProperty("visible", false);
 
-	var getJobId = function(element) {
+	getJobId = function(element) {
 		var td = $(element).up("tr");
 		return td.id.substring(4);
 	};
 	
-	var hideInfo = function(element) {
+	hideInfo = function(element) {
 		overlay.cfg.setProperty("visible", false);
 	};
 	
 	
-	var createLastVersionPanel = function(info) {
-		var panel = "";
-		var mainVersion = info.mainModule.version;
-		var mainGroupId = info.mainModule.groupId;
-		var mainArtifactId = info.mainModule.artifactId;
+	createLastVersionPanel = function(info) {
+		var panel, mainVersion, mainGroupId, mainArtifactId, currentGroup;
+		panel = "";
+		mainVersion = info.mainModule.version;
+		mainGroupId = info.mainModule.groupId;
+		mainArtifactId = info.mainModule.artifactId;
 		panel += '<div class="mavenInfoPanel">\n';
 		panel += '<div class="mavenMainModule">\n';
 		panel += '<div><strong>GroupId : </strong> ' + mainGroupId + '</div>\n';
@@ -30,7 +35,7 @@ var MavenInfoPlugin = (function(window, undefined) {
 		panel += '<div><strong>Version : </strong> ' + mainVersion + '</div>\n';
 		if (info.modules.length > 1) {
 			panel += '<div class="mavenModules">\n';
-			var currentGroup = "";
+			currentGroup = "";
 			info.modules.each(function(module) {
 				if (module.groupId != currentGroup) {
 					if (currentGroup != "") {
@@ -64,13 +69,14 @@ var MavenInfoPlugin = (function(window, undefined) {
 		return panel;
 	}
 	
-	var createDependenciesVersionPanel = function(info) {
-		var panel = "";
+	createDependenciesVersionPanel = function(info) {
+		var panel, mainVersion, currentGroup;
+		panel = "";
 		panel += '<div class="mavenInfoPanel">\n';
-		var mainVersion = info.version;
+		mainVersion = info.version;
 		if (info.dependencies.length > 0) {
 			panel += '<div class="mavenModules">\n';
-			var currentGroup = "";
+			currentGroup = "";
 			info.dependencies.each(function(module) {
 				if (module.groupId != currentGroup) {
 					if (currentGroup != "") {
@@ -106,7 +112,7 @@ var MavenInfoPlugin = (function(window, undefined) {
 		return panel;
 	}
 
-	var showPanel = function(element, txt) {
+	showPanel = function(element, txt) {
 		var old = $("MavenVersionInfoPanel");
 		if (old) {
 			old.innerHTML = txt;
@@ -116,7 +122,7 @@ var MavenInfoPlugin = (function(window, undefined) {
 		}
 	}
 	
-	var types =  {
+	types =  {
 		lastVersion : {
 			method: "getAjaxModuleList",
 			create: createLastVersionPanel
@@ -129,16 +135,18 @@ var MavenInfoPlugin = (function(window, undefined) {
 	
 
 	
-	var showInfo = function(element, typeName) {
-		var type = types[typeName] ;
-		var stub = MavenInfoPlugin.stub[typeName] ;
+	showInfo = function(element, typeName) {
+		var type, stub, jobId;
+		type = types[typeName] ;
+		stub = MavenInfoPlugin.stub[typeName] ;
 		
 		if (stub) {
-			var jobId = getJobId(element);
+			jobId = getJobId(element);
 			if(type.method) {
 				stub[type.method](jobId, function(response) {
-					var info = response.responseObject();
-					var txt = type.create(info)
+					var info, txt;
+					info = response.responseObject();
+					txt = type.create(info)
 					showPanel(element, txt);
 				});
 			}
