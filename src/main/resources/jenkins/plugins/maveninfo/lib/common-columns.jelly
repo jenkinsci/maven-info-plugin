@@ -7,6 +7,10 @@
 	
 		<link rel="stylesheet" type="text/css" href="${resURL}/plugin/maven-info/css/support${mip_suffix}.css"></link>
 		<script type="text/javascript" src="${resURL}/plugin/maven-info/js/support${mip_suffix}.js"></script>
+		<style type="text/css">
+			.mipVersion { ${app.getPlugin('maven-info').releasesStyle} }
+			.mipSnapshot { ${app.getPlugin('maven-info').effectiveSnapshotsStyle} }		
+		</style>
 	</st:once>
 	
 </j:jelly>

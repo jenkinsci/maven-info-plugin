@@ -2,39 +2,33 @@ package jenkins.plugins.maveninfo;
 
 import hudson.Extension;
 import hudson.Plugin;
-import hudson.model.Descriptor.FormException;
-
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-
-import net.sf.json.JSONObject;
-
-import org.kohsuke.stapler.StaplerRequest;
+import jenkins.model.Jenkins;
+import jenkins.plugins.maveninfo.config.MavenInfoGlobalConfig;
 
 @Extension
 public class MavenInfoPlugin extends Plugin {
 
-	private static final String KEY_HIDE_SNAPSHOTS = "hideSnapshots";
-
 	private static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
 
-	private boolean hideSnapshots = false;
+	public MavenInfoGlobalConfig getCfg() {
+		return (MavenInfoGlobalConfig) Jenkins.getInstance().getDescriptor(
+				MavenInfoGlobalConfig.class);
+	}
 
-	@Override
-	public void configure(StaplerRequest req, JSONObject formData)
-			throws IOException, ServletException, FormException {
+	public String getEffectiveSnapshotsStyle() {
+		return getCfg().getEffectiveSnapshotsStyle();
+	}
 
-		if (formData.has(KEY_HIDE_SNAPSHOTS)) {
-			this.hideSnapshots = formData.getBoolean(KEY_HIDE_SNAPSHOTS);
-		} else {
-			this.hideSnapshots = false;
-		}
+	public String getReleasesStyle() {
+		return getCfg().getReleasesStyle();
+	}
 
+	public String getSnapshotsStyle() {
+		return getCfg().getSnapshotsStyle();
 	}
 
 	public boolean isHideSnapshots() {
-		return hideSnapshots;
+		return getCfg().isHideSnapshots();
 	}
 
 	public boolean isSnapshot(String version) {
@@ -42,7 +36,7 @@ public class MavenInfoPlugin extends Plugin {
 	}
 
 	public String visibleVersion(String version) {
-		if (hideSnapshots) {
+		if (isHideSnapshots()) {
 			if (version != null && version.endsWith(SNAPSHOT_SUFFIX)) {
 				return version.substring(0,
 						version.length() - SNAPSHOT_SUFFIX.length());
