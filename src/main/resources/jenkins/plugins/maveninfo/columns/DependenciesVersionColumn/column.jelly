@@ -7,7 +7,7 @@
 		<st:once>
 			<script>MavenInfoPlugin.stub.dependenciesVersion =<st:bind value="${it}" /></script>
 		</st:once>		
-		${it.getVersion(job)}
+		<mi:version value="${it.getVersion(job)}"/>
 		<j:if test="${it.isMultipleVersions(job)}">
 			<abbr title="${%MultipleVersions}">*</abbr>
 		</j:if>

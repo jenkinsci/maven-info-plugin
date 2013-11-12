@@ -1,0 +1,11 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
+	xmlns:i="jelly:fmt">
+
+	<j:set var="versionClass" value="${'mipRelease'}" />
+	<j:if test="${app.getPlugin('maven-info').isSnapshot(value)}">
+		<j:set var="versionClass" value="${'mipSnapshot'}" />
+	</j:if>
+	<span class="mipVersion ${versionClass}">${app.getPlugin('maven-info').visibleVersion(value)}</span>
+
+</j:jelly>
