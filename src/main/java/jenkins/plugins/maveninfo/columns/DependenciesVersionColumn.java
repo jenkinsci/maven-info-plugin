@@ -51,9 +51,13 @@ public class DependenciesVersionColumn extends AbstractMavenInfoColumn {
 	}
 
 	private String findVersion(SortedSet<String> versions) {
-		String version = versions.first();
-		if (version == null) {
-			version = "";
+
+		String version = "";
+		if (!versions.isEmpty()) {
+			String first = versions.first();
+			if (first != null) {
+				version = first;
+			}
 		}
 		return version;
 	}
