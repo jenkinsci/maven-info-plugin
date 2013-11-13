@@ -1,10 +1,12 @@
 package jenkins.plugins.maveninfo.config;
 
 import hudson.Extension;
+import hudson.util.FormValidation;
 import jenkins.model.GlobalConfiguration;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
@@ -60,6 +62,22 @@ public class MavenInfoGlobalConfig extends GlobalConfiguration {
 		return true;
 	}
 
+	public FormValidation doCheckReleasesStyle(@QueryParameter String value) {
+		return doCheckStyles(value);
+	}
+
+	public FormValidation doCheckSnapshotsStyle(@QueryParameter String value) {
+		return doCheckStyles(value);
+	}
+
+	private FormValidation doCheckStyles(String parameter) {
+		if (parameter.matches(".*[{}<>].*")) {
+			return FormValidation
+					.error("What exactly are you trying to do? Only css rules content allowed. No tags nor css rules allowed.");
+		}
+		return FormValidation.ok();
+	}
+
 	public String getEffectiveSnapshotsStyle() {
 		if (StringUtils.isBlank(snapshotsStyle)) {
 			if (hideSnapshots) {
@@ -76,6 +94,7 @@ public class MavenInfoGlobalConfig extends GlobalConfiguration {
 	public String getSnapshotsStyle() {
 		return snapshotsStyle;
 	}
+
 	public boolean isHideSnapshots() {
 		return hideSnapshots;
 	}

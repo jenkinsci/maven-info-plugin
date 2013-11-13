@@ -9,11 +9,11 @@
 		</f:entry>
 
 		<f:entry title="${%SnapshotsStyle}" field="snapshotsStyle">
-			<f:expandableTextbox />
+			<f:textbox />
 		</f:entry>
 
 		<f:entry title="${%ReleasesStyle}" field="releasesStyle">
-			<f:expandableTextbox />
+			<f:textbox />
 		</f:entry>
 
 	</f:section>
