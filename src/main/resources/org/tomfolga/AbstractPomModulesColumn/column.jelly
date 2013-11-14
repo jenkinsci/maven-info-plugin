@@ -1,7 +1,9 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" 
 	xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:mi="jenkins/plugins/maveninfo/lib">
-	<td>
-	<j:forEach var="mavenModule" items="${job.lastBuild.moduleLastBuilds.keySet()}">
+	<td style="vertical-align:top;">
+	<j:forEach var="mavenModule" items="${job.lastBuild.moduleLastBuilds.keySet()}" indexVar="i">
+   		<j:if test="${(!(it.showGroupId || it.showArtifactId)) &amp;&amp; i!=0}"><st:nbsp/></j:if>
+		<j:if test="${(it.showGroupId || it.showArtifactId) &amp;&amp; i!=0}"><br/></j:if>
   		<j:if test="${it.showGroupId}">${mavenModule.moduleName.groupId}:</j:if>
    		<j:if test="${it.showArtifactId}">${mavenModule.moduleName.artifactId}:</j:if>
    		<j:if test="${it.showVersion}"><mi:version value="${mavenModule.version}"/></j:if>
