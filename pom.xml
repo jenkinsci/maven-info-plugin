@@ -55,12 +55,13 @@
 			<version>1.7</version>
 		</dependency>
 
+		<!-- 
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.m2release</groupId>
 			<artifactId>m2release</artifactId>
 			<version>0.12.0</version>
 			<optional>true</optional>
-		</dependency>
+		</dependency>-->
 
 		<dependency>
 			<groupId>junit</groupId>
