@@ -105,7 +105,7 @@ public class LastVersionColumn extends AbstractMavenInfoColumn {
 		ModuleNamePattern mainPattern = getModulePattern(job);
 
 		MavenModule m = BuildUtils.getMainModule(build, mainPattern);
-		return m.getVersion();
+		return m != null? m.getVersion() : null;
 	}
 
 	public boolean isMultipleVersions(MavenModuleSet job) {
