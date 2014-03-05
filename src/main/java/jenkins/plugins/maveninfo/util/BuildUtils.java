@@ -28,8 +28,15 @@ public class BuildUtils {
 	private static final Logger LOGGER = Logger.getLogger(BuildUtils.class
 			.getName());
 
+	private static final MavenInfoJobConfig DEFAULT_CONFIG = new MavenInfoJobConfig(
+			"", "", false, "", false, "");;
+
 	public static MavenInfoJobConfig getJobConfig(MavenModuleSet job) {
-		return job.getProperty(MavenInfoJobConfig.class);
+		MavenInfoJobConfig cfg = job.getProperty(MavenInfoJobConfig.class);
+		if (cfg == null) {
+			cfg = DEFAULT_CONFIG;
+		}
+		return cfg;
 	}
 
 	public static MavenModuleSetBuild getLastBuild(MavenModuleSet job) {
@@ -39,6 +46,9 @@ public class BuildUtils {
 	public static MavenModule getMainModule(MavenModuleSetBuild build,
 			ModuleNamePattern pattern) {
 
+		if (build == null) {
+			return null;
+		}
 		MavenModule root = null;
 		if (pattern != null) {
 			List<MavenModule> modules = BuildUtils.getModules(build);
@@ -112,10 +122,11 @@ public class BuildUtils {
 	}
 
 	public static List<MavenModule> getModules(MavenModuleSetBuild build) {
-
-		Set<MavenModule> moduleSet = build.getModuleLastBuilds().keySet();
-		List<MavenModule> modules = new ArrayList<MavenModule>(moduleSet);
-
-		return modules;
+		if (build != null) {
+			Set<MavenModule> moduleSet = build.getModuleLastBuilds().keySet();
+			return new ArrayList<MavenModule>(moduleSet);
+		} else {
+			return Collections.emptyList();
+		}
 	}
 }

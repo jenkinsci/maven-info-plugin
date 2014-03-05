@@ -38,13 +38,11 @@ public class LastVersionColumn extends AbstractMavenInfoColumn {
 			return Messages.MavenVersionColumn_DisplayName();
 		}
 
-
 		@Override
 		public boolean shownByDefault() {
 			return false;
 		}
 	}
-
 
 	@DataBoundConstructor
 	public LastVersionColumn(String columnName) {
@@ -77,15 +75,18 @@ public class LastVersionColumn extends AbstractMavenInfoColumn {
 	}
 
 	private JSONObject getModuleList(MavenModuleSet job) {
-
+		JSONObject json = new JSONObject();
 		MavenModuleSetBuild build = getBuild(job);
+		if (build == null) {
+			return json;
+		}
 		ModuleNamePattern mainPattern = getModulePattern(job);
 
 		MavenModule mainModule = BuildUtils.getMainModule(build, mainPattern);
 		List<MavenModule> modules = BuildUtils.getModules(build);
 
 		Collections.sort(modules, new MavenModuleComparator());
-		JSONObject json = new JSONObject();
+
 		json.accumulate("mainModule", getModuleAsJson(mainModule));
 		JSONArray jsonModules = new JSONArray();
 		for (MavenModule module : modules) {
@@ -105,7 +106,7 @@ public class LastVersionColumn extends AbstractMavenInfoColumn {
 		ModuleNamePattern mainPattern = getModulePattern(job);
 
 		MavenModule m = BuildUtils.getMainModule(build, mainPattern);
-		return m != null? m.getVersion() : null;
+		return m != null ? m.getVersion() : null;
 	}
 
 	public boolean isMultipleVersions(MavenModuleSet job) {
@@ -126,18 +127,20 @@ public class LastVersionColumn extends AbstractMavenInfoColumn {
 		}
 		return false;
 	}
+
 	/**
 	 * Deserialization method to ensure compatibility.
+	 * 
 	 * @return
 	 */
 	public Object readResolve() {
-		
+
 		// 0.0.5 -> 0.1.0 added column name to object fields
 		// Keep caption
-		if(getColumnName() == null) {
+		if (getColumnName() == null) {
 			setColumnName(Messages.MavenVersionColumn_Caption());
 		}
-		
-		return this ;
+
+		return this;
 	}
 }

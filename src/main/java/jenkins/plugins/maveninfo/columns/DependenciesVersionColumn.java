@@ -88,14 +88,18 @@ public class DependenciesVersionColumn extends AbstractMavenInfoColumn {
 	}
 
 	private JSONObject getDependenciesList(MavenModuleSet job) {
+		JSONObject response = new JSONObject();
 		MavenModuleSetBuild build = getBuild(job);
+		if (build == null) {
+			return response;
+		}
 		ModuleNamePattern pattern = getDependencyFilter(job);
 
 		List<Dependency> dependencies = BuildUtils.getModuleDependencies(build,
 				pattern);
 
 		String version = findVersion(findVersions(dependencies));
-		JSONObject response = new JSONObject();
+
 		response.accumulate("version", version);
 
 		JSONArray deps = new JSONArray();
