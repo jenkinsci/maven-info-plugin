@@ -39,21 +39,24 @@ public class PomPropertiesFinder implements PropertiesFinder {
 			MavenBuild build = mmsb.getModuleLastBuilds().get(main);
 			if (build != null) {
 				
-				FilePath p = build.getWorkspace().child("pom.xml");
-				if (p != null) {
+				FilePath workspace = build.getWorkspace();
+				if (workspace != null) {
+					Filepath p = workspace.child("pom.xml");
+					if (p != null) {
 
-					Digester digester = new Digester3();
-					digester.setRules(new ExtendedBaseRules());
+						Digester digester = new Digester3();
+						digester.setRules(new ExtendedBaseRules());
 
-					ctx.getRuleSet().addRuleInstances(digester);
+						ctx.getRuleSet().addRuleInstances(digester);
 
-					InputStream is = p.read();
-					try {
-						digester.parse(is);
-					} catch (SAXException ex) {
-						throw new IOException("Can't read POM: " + p.toString());
-					} finally {
-						is.close();
+						InputStream is = p.read();
+						try {
+							digester.parse(is);
+						} catch (SAXException ex) {
+							throw new IOException("Can't read POM: " + p.toString());
+						} finally {
+							is.close();
+						}
 					}
 				}
 			}
