@@ -4,19 +4,17 @@ import hudson.FilePath;
 import hudson.maven.MavenBuild;
 import hudson.maven.MavenModule;
 import hudson.maven.MavenModuleSetBuild;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 import jenkins.plugins.maveninfo.extractor.base.ExtractorContext;
 import jenkins.plugins.maveninfo.extractor.base.PropertiesFinder;
 import jenkins.plugins.maveninfo.patches.Digester3;
 import jenkins.plugins.maveninfo.util.BuildUtils;
 import jenkins.plugins.maveninfo.util.ModuleNamePattern;
-
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ExtendedBaseRules;
 import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Extracts properties from main pom.
@@ -35,11 +33,16 @@ public class PomPropertiesFinder implements PropertiesFinder {
 
 		MavenModule main = BuildUtils.getMainModule(mmsb, mainPattern);
 		if (main != null) {
-			
+
 			MavenBuild build = mmsb.getModuleLastBuilds().get(main);
 			if (build != null) {
-				
-				FilePath p = build.getWorkspace().child("pom.xml");
+				FilePath p;
+				FilePath workspace = build.getWorkspace();
+				if (workspace != null) {
+					p = workspace.child("pom.xml");
+				} else {
+					throw new RuntimeException("Remote node has been disconnected");
+				}
 				if (p != null) {
 
 					Digester digester = new Digester3();
