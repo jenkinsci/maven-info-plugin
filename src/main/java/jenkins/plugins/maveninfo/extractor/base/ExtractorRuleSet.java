@@ -3,9 +3,9 @@ package jenkins.plugins.maveninfo.extractor.base;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.digester.Digester;
-import org.apache.commons.digester.Rule;
-import org.apache.commons.digester.RuleSet;
+import org.apache.commons.digester3.Digester;
+import org.apache.commons.digester3.Rule;
+import org.apache.commons.digester3.RuleSet;
 
 /**
  * Ruleset for rules collection.

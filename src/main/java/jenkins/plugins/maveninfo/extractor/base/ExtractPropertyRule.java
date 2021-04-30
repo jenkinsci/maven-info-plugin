@@ -2,7 +2,7 @@ package jenkins.plugins.maveninfo.extractor.base;
 
 import java.util.Properties;
 
-import org.apache.commons.digester.Rule;
+import org.apache.commons.digester3.Rule;
 
 /**
  * Rule to extract a element's contents as a property.
