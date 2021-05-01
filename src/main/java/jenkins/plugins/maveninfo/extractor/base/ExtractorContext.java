@@ -5,7 +5,7 @@ import hudson.maven.MavenModuleSetBuild;
 
 import java.util.Properties;
 
-import org.apache.commons.digester.Rule;
+import org.apache.commons.digester3.Rule;
 
 import jenkins.plugins.maveninfo.config.MavenInfoJobConfig;
 

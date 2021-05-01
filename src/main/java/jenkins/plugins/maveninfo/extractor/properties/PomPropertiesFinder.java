@@ -10,13 +10,14 @@ import java.io.InputStream;
 
 import jenkins.plugins.maveninfo.extractor.base.ExtractorContext;
 import jenkins.plugins.maveninfo.extractor.base.PropertiesFinder;
-import jenkins.plugins.maveninfo.patches.Digester3;
 import jenkins.plugins.maveninfo.util.BuildUtils;
 import jenkins.plugins.maveninfo.util.ModuleNamePattern;
 
-import org.apache.commons.digester.Digester;
-import org.apache.commons.digester.ExtendedBaseRules;
+import org.apache.commons.digester3.Digester;
+import org.apache.commons.digester3.ExtendedBaseRules;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Extracts properties from main pom.
@@ -25,6 +26,22 @@ import org.xml.sax.SAXException;
  * 
  */
 public class PomPropertiesFinder implements PropertiesFinder {
+
+	public Digester createDigester(boolean secure) throws SAXException {
+		final Digester digester = new Digester();
+		if (secure) {
+			digester.setXIncludeAware(false);
+			try {
+				digester.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+				digester.setFeature("http://xml.org/sax/features/external-general-entities", false);
+				digester.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+				digester.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+			} catch (ParserConfigurationException ex) {
+				throw new SAXException("Failed to securely configure xml digester parser", ex);
+			}
+		}
+		return digester;
+	}
 
 	public void findProperties(ExtractorContext ctx) throws IOException,
 			InterruptedException {
@@ -42,18 +59,21 @@ public class PomPropertiesFinder implements PropertiesFinder {
 				FilePath p = build.getWorkspace().child("pom.xml");
 				if (p != null) {
 
-					Digester digester = new Digester3();
-					digester.setRules(new ExtendedBaseRules());
-
-					ctx.getRuleSet().addRuleInstances(digester);
-
-					InputStream is = p.read();
+					InputStream is = null;
 					try {
+						Digester digester = createDigester(!Boolean.getBoolean(this.getClass().getName() + ".UNSAFE"));
+						digester.setRules(new ExtendedBaseRules());
+
+						ctx.getRuleSet().addRuleInstances(digester);
+
+						is = p.read();
 						digester.parse(is);
 					} catch (SAXException ex) {
 						throw new IOException("Can't read POM: " + p.toString());
 					} finally {
-						is.close();
+						if (is != null) {
+							is.close();
+						}
 					}
 				}
 			}

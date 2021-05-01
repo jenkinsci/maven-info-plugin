@@ -5,7 +5,7 @@ import jenkins.plugins.maveninfo.extractor.base.ExtractPropertyRule;
 import jenkins.plugins.maveninfo.extractor.base.ExtractorContext;
 import jenkins.plugins.maveninfo.extractor.base.PropertiesFinder;
 
-import org.apache.commons.digester.Rule;
+import org.apache.commons.digester3.Rule;
 
 /**
  * Configures pom parser to extract description.

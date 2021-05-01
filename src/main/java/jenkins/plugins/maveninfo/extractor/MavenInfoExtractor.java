@@ -16,6 +16,7 @@ import jenkins.plugins.maveninfo.extractor.properties.DescriptionPropertiesFinde
 import jenkins.plugins.maveninfo.extractor.properties.JobUpdaterPropertiesySaver;
 import jenkins.plugins.maveninfo.extractor.properties.NamePropertiesFinder;
 import jenkins.plugins.maveninfo.extractor.properties.PomPropertiesFinder;
+import org.xml.sax.SAXException;
 
 /**
  * Extract Maven information from the build.

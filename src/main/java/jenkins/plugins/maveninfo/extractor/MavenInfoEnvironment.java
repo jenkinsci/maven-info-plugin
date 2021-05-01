@@ -10,6 +10,7 @@ import hudson.model.AbstractBuild;
 import java.io.IOException;
 
 import jenkins.plugins.maveninfo.config.MavenInfoJobConfig;
+import org.xml.sax.SAXException;
 
 /**
  * Environment that invokes {@link MavenInfoExtractor}.
