@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>token-macro</artifactId>
-			<version>2.13</version>
+			<version>293.v283932a_0a_b_49</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
