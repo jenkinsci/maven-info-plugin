@@ -67,21 +67,17 @@ public class PomPropertiesFinder implements PropertiesFinder {
 
 		FilePath p = workspace.child("pom.xml");
 
-		InputStream is = null;
 		try {
 			Digester digester = createDigester(!Boolean.getBoolean(this.getClass().getName() + ".UNSAFE"));
 			digester.setRules(new ExtendedBaseRules());
 
 			ctx.getRuleSet().addRuleInstances(digester);
 
-			is = p.read();
-			digester.parse(is);
+			try (InputStream is = p.read()) {
+				digester.parse(is);
+			}
 		} catch (SAXException ex) {
 			throw new IOException("Can't read POM: " + p);
-		} finally {
-			if (is != null) {
-				is.close();
-			}
 		}
 	}
 }
