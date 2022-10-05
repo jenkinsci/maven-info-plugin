@@ -11,7 +11,7 @@
 	<groupId>org.tomfolga</groupId>
 	<artifactId>maven-info</artifactId>
 	<name>Jenkins Maven Info Plugin</name>
-	<version>0.3.1-SNAPSHOT</version>
+	<version>0.3.1</version>
 	<packaging>hpi</packaging>
 
 	<url>https://wiki.jenkins-ci.org/display/JENKINS/Maven+Info+Plugin</url>
@@ -38,7 +38,7 @@
 		<connection>scm:git:git://github.com/jenkinsci/maven-info-plugin.git</connection>
 		<developerConnection>scm:git:git@github.com:jenkinsci/maven-info-plugin.git</developerConnection>
 		<url>https://github.com/jenkinsci/maven-info-plugin</url>
-	  <tag>HEAD</tag>
+	  <tag>maven-info-0.3.1</tag>
   </scm>
 
 	<dependencyManagement>
