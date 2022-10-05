@@ -51,32 +51,31 @@ public class PomPropertiesFinder implements PropertiesFinder {
 				.getCompiledMainModulePattern();
 
 		MavenModule main = BuildUtils.getMainModule(mmsb, mainPattern);
-		if (main != null) {
-			
-			MavenBuild build = mmsb.getModuleLastBuilds().get(main);
-			if (build != null) {
-				
-				FilePath p = build.getWorkspace().child("pom.xml");
-				if (p != null) {
+		if (main == null) {
+			return;
+		}
 
-					InputStream is = null;
-					try {
-						Digester digester = createDigester(!Boolean.getBoolean(this.getClass().getName() + ".UNSAFE"));
-						digester.setRules(new ExtendedBaseRules());
+		MavenBuild build = mmsb.getModuleLastBuilds().get(main);
+		if (build == null) {
+			return;
+		}
 
-						ctx.getRuleSet().addRuleInstances(digester);
+		FilePath workspace = build.getWorkspace();
+		if (workspace == null) {
+			return;
+		}
 
-						is = p.read();
-						digester.parse(is);
-					} catch (SAXException ex) {
-						throw new IOException("Can't read POM: " + p.toString());
-					} finally {
-						if (is != null) {
-							is.close();
-						}
-					}
-				}
-			}
+		FilePath p = workspace.child("pom.xml");
+
+		try (InputStream is = p.read()) {
+			Digester digester = createDigester(!Boolean.getBoolean(this.getClass().getName() + ".UNSAFE"));
+			digester.setRules(new ExtendedBaseRules());
+
+			ctx.getRuleSet().addRuleInstances(digester);
+
+			digester.parse(is);
+		} catch (SAXException ex) {
+			throw new IOException("Can't read POM: " + p);
 		}
 	}
 }
