@@ -1,49 +1,38 @@
 /* Support Js */
 var MavenInfoPlugin = (function(window, undefined) {
 
-	var overlay, getJobId, hideInfo, createLastVersionPanel, 
-		createDependenciesVersionPanel, showPanel, types, showInfo
-		delayTimer = null, delayId = "";
-	
-	$$('body')[0].insert({
-		top : '<div id="MavenVersionInfoPanel"></div>'
-	});
-	
-	overlay = new YAHOO.widget.Overlay("MavenVersionInfoPanel");
-	overlay.cfg.setProperty("visible", false);
+	var getJobId, hideInfo, createLastVersionPanel,
+		createDependenciesVersionPanel, showPanel, types, showInfo;
 
 	getJobId = function(element) {
-		var td = $(element).up("tr");
+		var td = element.closest("tr");
 		return td.id.substring(4);
 	};
-	
-	
-	
-	
+
 	createLastVersionPanel = function(info) {
 		var panel, mainVersion, mainGroupId, mainArtifactId, currentGroup;
 		panel = "";
 		mainVersion = info.mainModule.version;
 		mainGroupId = info.mainModule.groupId;
 		mainArtifactId = info.mainModule.artifactId;
-		panel += '<div class="mavenInfoPanel">\n';
-		panel += '<div class="mavenMainModule">\n';
-		panel += '<div><strong>GroupId : </strong> ' + mainGroupId + '</div>\n';
+		panel += '<div class="mavenInfoPanel">';
+		panel += '<div class="mavenMainModule">';
+		panel += '<div><strong>GroupId : </strong> ' + mainGroupId + '</div>';
 		panel += '<div><strong>ArtifactId : </strong> ' + mainArtifactId
-				+ '</div>\n';
-		panel += '<div><strong>Version : </strong> ' + mainVersion + '</div>\n';
+				+ '</div>';
+		panel += '<div><strong>Version : </strong> ' + mainVersion + '</div>';
 		if (info.modules.length > 1) {
-			panel += '<div class="mavenModules">\n';
+			panel += '<div class="mavenModules">';
 			currentGroup = "";
-			info.modules.each(function(module) {
+			info.modules.forEach(function(module) {
 				if (module.groupId != currentGroup) {
 					if (currentGroup != "") {
-						panel += '</div>\n';
+						panel += '</div>';
 					}
 					currentGroup = module.groupId;
-					panel += '<div class="groupId">\n';
+					panel += '<div class="groupId">';
 					panel += '<div class="groupIdHeader">' + module.groupId
-							+ '</div>\n';
+							+ '</div>';
 				}
 
 				var isMain = false;
@@ -59,32 +48,32 @@ var MavenInfoPlugin = (function(window, undefined) {
 				if (isMain) {
 					panel += "</strong>"
 				}
-				panel += "<br>\n";
+				panel += "<br>";
 			});
-			panel += '</div>\n';
-			panel += '</div>\n';
+			panel += '</div>';
+			panel += '</div>';
 		}
-		panel += '</div>\n';
+		panel += '</div>';
 		return panel;
 	}
 	
 	createDependenciesVersionPanel = function(info) {
 		var panel, mainVersion, currentGroup;
 		panel = "";
-		panel += '<div class="mavenInfoPanel">\n';
+		panel += '<div class="mavenInfoPanel">';
 		mainVersion = info.version;
 		if (info.dependencies.length > 0) {
-			panel += '<div class="mavenModules">\n';
+			panel += '<div class="mavenModules">';
 			currentGroup = "";
-			info.dependencies.each(function(module) {
+			info.dependencies.forEach(function(module) {
 				if (module.groupId != currentGroup) {
 					if (currentGroup != "") {
-						panel += '</div>\n';
+						panel += '</div>';
 					}
 					currentGroup = module.groupId;
-					panel += '<div class="groupId">\n';
+					panel += '<div class="groupId">';
 					panel += '<div class="groupIdHeader">' + module.groupId
-							+ '</div>\n';
+							+ '</div>';
 				}
 
 				panel += module.artifactId;
@@ -95,30 +84,28 @@ var MavenInfoPlugin = (function(window, undefined) {
 				} else if (module.versions.length > 1) {
 					var hasMore = false ;
 					panel += " [" ;
-					module.versions.each(function (version) {
+					module.versions.forEach(function (version) {
 						if(hasMore) { panel += ", "; } 
 						panel += version ;
 						hasMore = true;
 					});
 					panel += "]";
 				}
-				panel += "<br>\n";
+				panel += "<br>";
 			});
-			panel += '</div>\n';
-			panel += '</div>\n';
+			panel += '</div>';
+			panel += '</div>';
 		}
-		panel += '</div>\n';
+		panel += '</div>';
 		return panel;
 	}
 
+
 	showPanel = function(element, txt) {
-		var old = $("MavenVersionInfoPanel");
-		if (old) {
-			old.innerHTML = txt;
-			overlay.cfg.setProperty("context", [ element, "tl", "bl",
-					[ "beforeShow", "windowResize" ], [ -2, -2 ] ]);
-			overlay.cfg.setProperty("visible", true);
-		}
+    const s = element.querySelector(".mipVersion");
+     s.setAttribute("data-html-tooltip", txt);
+     Behaviour.applySubtree(s, true);
+     s.dispatchEvent(new Event('mouseenter'));
 	}
 	
 	types =  {
@@ -132,7 +119,6 @@ var MavenInfoPlugin = (function(window, undefined) {
 		}
 	}
 	
-
 	
 	showInfoReal = function(element, typeName) {
 		var type, stub, jobId;
@@ -145,7 +131,7 @@ var MavenInfoPlugin = (function(window, undefined) {
 				stub[type.method](jobId, function(response) {
 					var info, txt;
 					info = response.responseObject();
-					txt = type.create(info)
+					txt = type.create(info);
 					showPanel(element, txt);
 				});
 			}
@@ -156,42 +142,19 @@ var MavenInfoPlugin = (function(window, undefined) {
 		var jobId, name;
 		jobId = getJobId(element);
 		name = typeName + ":" + jobId ;
-		
-		if(delayTimer != null) {
-			if(delayId == name) {
-				return ;
-			}
-			clearTimeout(delayTimer) ;
-			delayTimer = null ;
-		} 
-		
-		delayId = name ;
-		delayTimer = setTimeout(function() {showInfoReal(element, typeName)}, MavenInfoPlugin.delay) ;
+		showInfoReal(element, typeName);
 	}
 	
-	hideInfo = function(element, typeName) {
-		var jobId, name;
-		jobId = getJobId(element);
-		name = typeName + ":" + jobId ;
-		
-		if(delayTimer != null && delayId == name) {
-			clearTimeout(delayTimer) ;
-			delayTimer = null ;
-		}
-		overlay.cfg.setProperty("visible", false);
-	};
-
-
 	Behaviour.specify('td.mavenLastVersionColumn', 'lastVersion', 10,
 		function(element) {
-			element.onmouseover = function(ev) { showInfo(element, "lastVersion"); };
-			element.onmouseout =  function(ev) { hideInfo(element, "lastVersion"); };
+      const s = element.querySelector(".mip-tooltip");
+			s.onmouseenter = function(ev) { showInfo(element, "lastVersion"); };
 		});
 	
 	Behaviour.specify('td.mavenDependenciesColumn', 'dependenciesVersion', 10,
 		function(element) {
-			element.onmouseover = function(ev) { showInfo(element, "dependenciesVersion"); };
-			element.onmouseout =  function(ev) { hideInfo(element, "dependenciesVersion"); };
+      const s = element.querySelector(".mip-tooltip");
+			s.onmouseenter = function(ev) { showInfo(element, "dependenciesVersion"); };
 		});
 
 	return {
