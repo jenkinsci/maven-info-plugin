@@ -11,7 +11,7 @@
 	<groupId>org.tomfolga</groupId>
 	<artifactId>maven-info</artifactId>
 	<name>Jenkins Maven Info Plugin</name>
-	<version>0.3.2</version>
+	<version>0.3.3-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 
 	<url>https://wiki.jenkins-ci.org/display/JENKINS/Maven+Info+Plugin</url>
