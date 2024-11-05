@@ -4,10 +4,8 @@
 	xmlns:i="jelly:fmt">
 	
 	<st:once>
-		<j:if test="${'true' != h.getSystemProperty('hudson.hpi.run')}"><j:set var="mip_suffix" value="${'-min'}"/></j:if>
-	
-		<link rel="stylesheet" type="text/css" href="${resURL}/plugin/maven-info/css/support${mip_suffix}.css"></link>
-		<script type="text/javascript" src="${resURL}/plugin/maven-info/js/support${mip_suffix}.js"></script>
+		<link rel="stylesheet" type="text/css" href="${resURL}/plugin/maven-info/css/support.css"></link>
+		<script type="text/javascript" src="${resURL}/plugin/maven-info/js/support.js"></script>
 		<style type="text/css">
 			.mipVersion { ${app.getPlugin('maven-info').releasesStyle} }
 			.mipSnapshot { ${app.getPlugin('maven-info').effectiveSnapshotsStyle} }		

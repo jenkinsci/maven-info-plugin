@@ -7,6 +7,6 @@
 	<j:if test="${app.getPlugin('maven-info').isSnapshot(value)}">
 		<j:set var="versionClass" value="${'mipSnapshot'}" />
 	</j:if>
-	<span class="mipVersion ${versionClass}">${app.getPlugin('maven-info').visibleVersion(value)}</span>
+  <span class="mip-tooltip"><span class="mipVersion ${versionClass}">${app.getPlugin('maven-info').visibleVersion(value)}</span></span>
 
 </j:jelly>

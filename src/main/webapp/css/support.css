@@ -3,9 +3,6 @@
 }
 
 .mavenInfoPanel {
-	background-color: white;
-	border: 1px solid black;
-	z-index: 1000;
 	margin: auto;
 	padding: 2px 5px;
 }
