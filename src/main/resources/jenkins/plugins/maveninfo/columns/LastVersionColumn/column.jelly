@@ -6,7 +6,7 @@
 	<td class="mavenLastVersionColumn">
 		<mi:common-columns />
 		<st:once>
-			<script>MavenInfoPlugin.stub.lastVersion =<st:bind value="${it}" /></script>
+			<st:bind value="${it}" var="lastVersionProxy"/>
 		</st:once>
 		<mi:version value="${it.getVersion(job)}"/>
 		<j:if test="${it.isMultipleVersions(job)}">

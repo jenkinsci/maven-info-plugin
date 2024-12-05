@@ -6,8 +6,8 @@
 	<td class="mavenDependenciesColumn">
 		<mi:common-columns />
 		<st:once>
-			<script>MavenInfoPlugin.stub.dependenciesVersion =<st:bind value="${it}" /></script>
-		</st:once>		
+			<st:bind value="${it}" var="dependenciesVersionProxy"/>
+		</st:once>
 		<mi:version value="${it.getVersion(job)}"/>
 		<j:if test="${it.isMultipleVersions(job)}">
 			<abbr title="${%MultipleVersions}">*</abbr>
