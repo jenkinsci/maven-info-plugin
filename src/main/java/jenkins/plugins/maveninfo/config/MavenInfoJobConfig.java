@@ -11,7 +11,6 @@ import jenkins.plugins.maveninfo.l10n.Messages;
 import jenkins.plugins.maveninfo.util.InvalidPatternException;
 import jenkins.plugins.maveninfo.util.ModuleNamePattern;
 
-import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -28,7 +27,7 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 
 		public FormValidation checkPattern(String value, boolean optional) {
 
-			if (optional && StringUtils.isBlank(value)) {
+			if (optional && (value == null || value.isBlank())) {
 				return FormValidation.ok();
 			}
 			try {
@@ -95,7 +94,7 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 
 	public ModuleNamePattern getCompiledDependenciesPattern() {
 		if (this.compiledDependenciesPattern == null
-				&& StringUtils.isNotBlank(dependenciesPattern)) {
+				&& dependenciesPattern != null && !dependenciesPattern.isBlank()) {
 
 			this.compiledDependenciesPattern = new ModuleNamePattern(
 					this.dependenciesPattern);
@@ -106,7 +105,7 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 
 	public ModuleNamePattern getCompiledMainModulePattern() {
 		if (this.compiledMainModulePattern == null
-				&& StringUtils.isNotBlank(mainModulePattern)) {
+				&& mainModulePattern != null && !mainModulePattern.isBlank()) {
 
 			this.compiledMainModulePattern = new ModuleNamePattern(
 					this.mainModulePattern);
@@ -148,7 +147,7 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 	}
 
 	public void setDependenciesPattern(String dependenciesPattern) {
-		if (StringUtils.isNotBlank(dependenciesPattern)) {
+		if (dependenciesPattern != null && !dependenciesPattern.isBlank()) {
 			this.dependenciesPattern = dependenciesPattern.trim();
 		} else {
 			this.dependenciesPattern = "";
@@ -161,7 +160,7 @@ public class MavenInfoJobConfig extends JobProperty<Job<?, ?>> {
 	}
 
 	public void setMainModulePattern(String mainModulePattern) {
-		if (StringUtils.isNotBlank(mainModulePattern)) {
+		if (mainModulePattern != null && !mainModulePattern.isBlank()) {
 			this.mainModulePattern = mainModulePattern.trim();
 		} else {
 			this.mainModulePattern = "";
