@@ -5,7 +5,6 @@ import hudson.maven.ModuleName;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Pattern to match Maven Module Names.
@@ -37,12 +36,12 @@ public class ModuleNamePattern {
 		String groupPattern = splitter.group(1);
 		String artifactPattern = splitter.group(2);
 
-		if (StringUtils.isNotBlank(groupPattern) && !"*".equals(groupPattern)) {
+		if (groupPattern != null && !groupPattern.isBlank() && !"*".equals(groupPattern)) {
 			groupPattern = preparePattern(groupPattern);
 			groupMatcher = Pattern.compile(groupPattern).matcher("");
 		}
 
-		if (StringUtils.isNotBlank(artifactPattern)
+		if (artifactPattern != null && !artifactPattern.isBlank()
 				&& !"*".equals(artifactPattern)) {
 			artifactPattern = preparePattern(artifactPattern);
 			artifactMatcher = Pattern.compile(artifactPattern).matcher("");

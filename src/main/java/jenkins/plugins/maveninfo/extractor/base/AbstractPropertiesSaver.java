@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 
@@ -36,7 +35,7 @@ public abstract class AbstractPropertiesSaver implements PropertiesSaver {
 			ExtractorContext context) throws IOException, InterruptedException {
 		Properties properties = context.getProperties();
 		String defaultValue = properties.getProperty(property, "");
-		if (StringUtils.isNotBlank(defaultValue)) {
+		if (defaultValue != null && !defaultValue.isBlank()) {
 			defaultValue = "<pre>" + defaultValue + "</pre>";
 		}
 		return expandTemplate(template, context, defaultValue);
@@ -50,7 +49,7 @@ public abstract class AbstractPropertiesSaver implements PropertiesSaver {
 		Properties properties = context.getProperties();
 
 		String expanded = defaultValue;
-		if (StringUtils.isNotBlank(template)) {
+		if (template != null && !template.isBlank()) {
 			try {
 				List<TokenMacro> macros = Collections
 						.singletonList((TokenMacro) new PropertiesTokenMacro(

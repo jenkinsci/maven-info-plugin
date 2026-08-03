@@ -3,7 +3,6 @@ package jenkins.plugins.maveninfo.util;
 import hudson.maven.ModuleName;
 import junit.framework.Assert;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.maven.model.Dependency;
 import org.junit.Test;
 
@@ -113,7 +112,7 @@ public class ModuleNamePatternTest {
 			new ModuleNamePattern(pattern);
 			Assert.fail();
 		} catch (InvalidPatternException e) {
-			if (StringUtils.isNotBlank(expected)) {
+			if (expected != null && !expected.isBlank()) {
 				Assert.assertTrue(e.getMessage().contains(expected));
 			}
 		}

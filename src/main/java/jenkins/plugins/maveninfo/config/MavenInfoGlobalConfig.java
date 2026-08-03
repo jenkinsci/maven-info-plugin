@@ -5,7 +5,6 @@ import hudson.util.FormValidation;
 import jenkins.model.GlobalConfiguration;
 import net.sf.json.JSONObject;
 
-import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -79,7 +78,7 @@ public class MavenInfoGlobalConfig extends GlobalConfiguration {
 	}
 
 	public String getEffectiveSnapshotsStyle() {
-		if (StringUtils.isBlank(snapshotsStyle)) {
+		if (snapshotsStyle == null || snapshotsStyle.isBlank()) {
 			if (hideSnapshots) {
 				return DEFAULT_SNAPSHOT_STYLE;
 			}
